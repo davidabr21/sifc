@@ -6,8 +6,7 @@
     <session-factory>
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://node44559-env-9664657.jelastic.saveincloud.net
-:3306/sifc_dev?zeroDateTimeBehavior=convertToNull</property>
+        <property name="hibernate.connection.url">jdbc:mysql://node44559-env-9664657.jelastic.saveincloud.net:3306/sifc_dev?zeroDateTimeBehavior=convertToNull</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">q5Y0VaQFB3</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>

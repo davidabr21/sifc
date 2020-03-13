@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<title>Bodega</title>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/landingPageTemplate.xhtml">
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.cart']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+			<style>
+			.column5, .column6 {
+				width: 30px;
+			}
+			.card-body{
+				top: -20px;
+			    position: relative;
+			    z-index: 1;
+			    background-color: #fff;
+			    border-top-right-radius: 25px;
+			    border-top-left-radius: 25px;
+			    -moz-box-shadow: 0px -1px 3px rgba(50, 50, 50, 0.15);
+			    -webkit-box-shadow:: 0px -1px 3px rgba(50, 50, 50, 0.15);
+			    box-shadow: 0px -1px 3px rgba(50, 50, 50, 0.15);
+  
+			}			
+			.carousel {
+				  height: 100%;
+			}
+			.imgcarousel{
+				max-height: 100%;  
+				max-width: 100%; 
+				position: absolute;  
+				top: 0;  
+				bottom: 0;  
+				left: 0;  
+				right: 0;  
+				margin: auto;
+			}
+			.carousel-control-next-icon, .carousel-control-prev-icon{
+				filter: brightness(50%);
+			}
+			</style>
+			<script>
+			$( document ).ready(function() {
+				$('.carousel-inner .carousel-item:first-child').addClass('active');
+				$('.carousel').carousel('pause');
+			});
+			</script>
+				<div class="img-header" style="background: url(#{resource['images/pharma.jpg']}); background-size: cover; height: 180px; background-position-y: 300px;">
+				
+				</div>
+			<div class="main-container">
+				<div class="row" style="margin: 0">
+					
+					<div class="col-12">
+						<div class="row" style="margin: 0; padding: 30px 0 30px 0">
+						<ui:repeat value="#{producto.obtenerListaProductos()}" var="pro">
+						<div class="card" style="width: 18rem; margin: 10px 20px 0 10px">
+						  <h:graphicImage rendered="#{empty pro.imagenporproductos}" library="images" class="card-img-top" name="noprimg.png" />
+						  <o:graphicImage rendered ="#{not empty pro.imagenporproductos}" value="#{pro.imagenporproductos.toArray()[0].ipImagen}" dataURI="true" class="card-img-top"/>
+
+						  <div class="card-body" style="padding: 20px 20px 0 20px">
+						    <h5 class="card-title" style="margin-bottom: .15rem">#{pro.proNombre}</h5>
+						    <p class="card-text" style="color: #777; font-size: 14px">
+						    <script>
+						    var str = "#{pro.proDescripcion}";
+						    var n = str.length;
+						    /* <![CDATA[ */
+						    if(n >= 59){
+						    	if(str.charAt(58) == ' '){
+						    		str = str.slice(0, 58);
+							    	document.write(str + "...");
+							    } else{
+							    	str = str.slice(0, 59);
+							    	document.write(str + "...");
+								}
+						    	
+							} else{
+								document.write(str);
+							}
+					    	/* ]]> */
+						    </script>
+						    </p>
+						    <hr/>
+						    <div class="row" style="margin: 0">
+						    	<p class="card-text col-4" style="padding: 0"><b>
+						    	<script>
+						    		let precio#{pro.proId} = #{pro.proPrecio};
+						    		var total = new Intl.NumberFormat('es-ES').format(precio#{pro.proId});
+						    		document.write("$" + total);
+						    	</script>
+						    	</b></p>
+					    		<div class="col-8" style="text-align: right">
+					    		
+					    			<h:link outcome="ProductoDetalleReadL.xhtml" value="Ver más" >
+									  <f:param name="id" value="#{pro.proId}" />
+									</h:link>
+
+					    		</div>
+						    	
+						    </div>
+						    
+						  </div>
+						</div>
+						</ui:repeat>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

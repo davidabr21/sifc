@@ -1,0 +1,645 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+	<f:metadata>
+        	<f:event type="preRenderView" listener="#{usuariob.obtenerUsuario(request.getSession(false).getAttribute('id'))}"/>
+   	</f:metadata>
+	<ui:define name="pageTitle"><h:outputText value = "SIFC - #{translate['menu.user']}"/></ui:define>
+		<ui:define name="mainContain">
+			<ui:fragment rendered="#{request.getSession(false).getAttribute('Admin') != null}">
+			
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/jquery.dataTables.min.css" />
+			<h:outputScript library="js" name="jquery.dataTables.min.js" target="body"/>
+			<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+			<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script> 
+			<h:outputScript library="js" name="grid.js" target="body"/> 
+			
+			<style>
+			.column3, .column5 {
+				
+			}
+			.centerimg tbody tr td{
+				text-align: center;
+			}
+			.centerimg, tbody, tr, td{
+				width: 100%;
+			}
+			</style>
+			<div class="img-header" style="background: url(#{resource['images/admin.jpg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+				
+			</div>
+			<div class="main-container">
+				<div class="grid-container" style="width: 90%;">
+				<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+					  <li class="breadcrumb-item"><a href="#">#{translate['menu.user']}</a></li>
+					  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.user']}</li>
+					  </ol>
+				</nav>
+
+					<h:form id="mainForm" enctype="multipart/form-data">
+
+
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+							<a data-toggle="modal" data-target="#ModalAgregar"
+								href="#exampleModal"><h:graphicImage library="images" style="width: 24px" name="SI/Grid/add.png" /></a>
+						</div>
+
+						</nav>
+
+						<h:dataTable value="#{usuariob.obtenerLista()}" var="obj"
+							styleClass="main-grid table table-striped table-sm" id="main-grid"
+							columnClasses="column1, column2, column3, column4, column5">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								<h:outputLabel value="#{obj.usId}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['user.username']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.usNombreDeUsuario}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['user.email']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.usCorreo}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['user.names']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.usNombres}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['user.surnames']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.usApellidos}" style="margin-bottom: 0;" />
+							</h:column>
+							<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['user.state']}" />
+									</f:facet>
+									<h:outputLabel rendered="#{obj.usEstado == 'Activo'}" value="">
+									<span class="full-stock state">&nbsp;</span>
+									<h:outputText value="#{translate['state.enabled']}" />
+								</h:outputLabel>
+								<h:outputLabel rendered="#{obj.usEstado == 'Inactivo'}" value="">
+									<span class="low-stock state">&nbsp;</span>
+									<h:outputText value="#{translate['state.disabled']}" />
+								</h:outputLabel>
+							</h:column>
+							
+							<!-- 
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['user.address']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.usDireccion}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							 -->
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['user.rol']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.rolNombre}" style="margin-bottom: 0;" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['user.warehouse']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.boDireccion}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{usuariob.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#readModal" />
+									<f:ajax render="readForm" />
+									<img width="24" src="../resources/images/SI/Grid/read.png" />
+								</h:commandLink>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{usuariob.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#modalDelete" />
+									<f:ajax render="deleteForm" />
+									<h:graphicImage library="images" style="width: 24px" name="SI/Grid/remove.png" />
+								</h:commandLink>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{usuariob.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#EditModal" />
+									<f:ajax render="editForm" />
+									<h:graphicImage library="images" style="width: 24px" name="SI/Grid/edit.png" />
+								</h:commandLink>
+							</h:column>
+
+						</h:dataTable>
+						<div id="pager"></div>
+
+						<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel"><h:outputText value = "#{translate['form.add']} #{translate['user']}"/></h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- PopUp body -->
+									<div class="modal-body">
+
+										<div class="form-row">
+											<div class="form-group col-6">
+												<label><h:outputText value = "Id:"/></label>
+												<h:inputText disabled="true" value="#{usuariob.usId}"
+													styleClass="form-control" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.username']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.usNombreDeUsuario}" id="username-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.username'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="50" message="#{of:format2(translate['validation.betweenchar'], 5, 50)}" />
+													<f:ajax event="keyup" render="usernameMsg" />
+													<f:ajax event="blur" render="usernameMsg" />
+												</h:inputText>
+												<h:message id="usernameMsg" for="username-i" styleClass="validation-tooltip" />
+												
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.password']}:"/>
+												</label>
+												<h:inputSecret value="#{usuariob.usClave}" id="pass-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.password'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="50" message="#{of:format2(translate['validation.betweenchar'], 5, 50)}" />
+													<f:ajax event="keyup" render="passMsg" />
+													<f:ajax event="blur" render="passMsg" />
+												</h:inputSecret>
+												<h:message id="passMsg" for="pass-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.email']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.usCorreo}" id="email-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.email'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="90" message="#{of:format2(translate['validation.betweenchar'], 5, 90)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" message="#{translate['form.emailformat']}" />
+													<f:ajax event="keyup" render="emailMsg" />
+													<f:ajax event="blur" render="emailMsg" />
+												</h:inputText>
+												<h:message id="emailMsg" for="email-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.names']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.usNombres}" id="names-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.names'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="60" message="#{of:format2(translate['validation.betweenchar'], 5, 60)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />													<f:ajax event="keyup" render="namesMsg" />
+													<f:ajax event="blur" render="namesMsg" />
+												</h:inputText>
+												<h:message id="namesMsg" for="names-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.surnames']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.usApellidos}" id="usernames-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.surnames'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="60" message="#{of:format2(translate['validation.betweenchar'], 5, 60)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />
+													<f:ajax event="keyup" render="surnamesMsg" />
+													<f:ajax event="blur" render="surnamesMsg" />
+												</h:inputText>
+												<h:message id="surnamesMsg" for="usernames-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['user.state']}:" />
+													</label>
+													<h:selectOneMenu value="#{usuariob.usEstado}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.selection'], translate['user.state'])}"
+														styleClass="custom-select" id="estado-i">
+														<f:selectItem itemLabel="#{translate['form.select']}"
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItem itemlabel="#{translate['state.enabled']}"
+															itemValue="Activo"></f:selectItem>
+														<f:selectItem itemlabel="#{translate['state.disabled']}"
+															itemValue="Inactivo"></f:selectItem>
+														<f:ajax event="change" render="estadoMsg" />
+													</h:selectOneMenu>
+													<br />
+													<h:message id="estadoMsg" for="estado-i"
+														styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['user.address']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.usDireccion}"
+													styleClass="form-control" id="description-i">
+												</h:inputText>
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['user.rol']}:"/>
+												</label>
+												<h:selectOneMenu value="#{usuariob.rolId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['user.rol'])}"
+													styleClass="custom-select" id="rol-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{rolb.obtenerLista()}"
+														var="r" itemLabel="#{r.rolNombre}" itemValue="#{r.rolId}" />
+													<f:ajax event="change" render="rolMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="rolMsg" for="rol-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['user.warehouse']}:"/>
+												</label>
+												<h:selectOneMenu value="#{usuariob.boId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['user.warehouse'])}"
+													styleClass="custom-select" id="warehouse-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{bodega.obtenerLista()}"
+														var="b" itemLabel="#{b.boId} - #{b.boDireccion}" itemValue="#{b.boId}" />
+													<f:ajax event="change" render="wareMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="wareMsg" for="warehouse-i" styleClass="validation-tooltip" />
+											</div>
+
+											
+											<div class="form-group col-12">
+											<div>
+											<o:outputLabel for="file" value="Image: " />					        
+										         <div class="custom-file">
+												    <o:inputFile id="file" value="#{usuariob.archivoImg}" class="custom-file-input cfi"
+										            accept="image/*" acceptMessage="#{translate['form.filetype ']} {2}"
+										            maxsize="#{1024 * 1024}" maxsizeMessage="#{translate['form.maxfilesize']} {2}">
+										            <f:ajax listener="#{usuariob.mostrarImg}" render="resultImg" />
+										        	</o:inputFile>
+												    <label class="custom-file-label cfl" for="file">#{translate['form.choosefile']}</label>
+												 </div>
+										        <h:message id="file_m" for="file" />
+										    </div>
+										    <hr />
+										    <h:panelGrid columns="1" id="resultImg" class="centerimg">
+										    <o:graphicImage value="#{usuariob.usImagen}" dataURI="true" width="100" height="100"
+										        rendered="#{not empty usuariob.usImagen}" style="border-radius: 50%" />
+										    </h:panelGrid>
+									        </div>
+										</div>
+									</div>
+									<script>
+									// Add the following code if you want the name of the file appear on select
+									$(".cfi").on("change", function() {
+									  var fileName = $(this).val().split("\\").pop();
+									  $(this).siblings(".cfl").addClass("selected").html(fileName);
+									});
+									</script>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">
+											<h:outputText value = "#{translate['form.cancel']}"/>
+										</button>
+										<h:commandButton value="#{translate['form.submit']}" id="submit-button"
+											action="#{usuariob.registrar()}"
+											styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+
+			<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<h:form id="editForm" enctype="multipart/form-data">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">
+									<h:outputText value = "#{translate['form.edit']} #{translate['user']}: "/><i><h:outputText
+											value="#{usuariob.objetoObtenido.usNombreDeUsuario}" /></i>
+								</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="form-row">
+											<div class="form-group col-6">
+												<label><h:outputText value = "Id:"/></label>
+												<h:inputText disabled="true" value="#{usuariob.objetoObtenido.usId}"
+													styleClass="form-control" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.username']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.objetoObtenido.usNombreDeUsuario}" id="username-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.username'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="50" message="#{of:format2(translate['validation.betweenchar'], 5, 50)}" />
+													<f:ajax event="keyup" render="usernameMsg" />
+													<f:ajax event="blur" render="usernameMsg" />
+												</h:inputText>
+												<h:message id="usernameMsg" for="username-i" styleClass="validation-tooltip" />
+												
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.password']}:"/>
+												</label>
+												<h:inputSecret value="#{usuariob.objetoObtenido.usClave}" id="pass-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.password'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="50" message="#{of:format2(translate['validation.betweenchar'], 5, 50)}" />
+													<f:ajax event="keyup" render="passMsg" />
+													<f:ajax event="blur" render="passMsg" />
+												</h:inputSecret>
+												<h:message id="passMsg" for="pass-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.email']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.objetoObtenido.usCorreo}" id="email-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.email'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="90" message="#{of:format2(translate['validation.betweenchar'], 5, 90)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" message="#{translate['form.emailformat']}" />
+													<f:ajax event="keyup" render="emailMsg" />
+													<f:ajax event="blur" render="emailMsg" />
+												</h:inputText>
+												<h:message id="emailMsg" for="email-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.names']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.objetoObtenido.usNombres}" id="names-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.names'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="60" message="#{of:format2(translate['validation.betweenchar'], 5, 60)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />													<f:ajax event="keyup" render="namesMsg" />
+													<f:ajax event="blur" render="namesMsg" />
+												</h:inputText>
+												<h:message id="namesMsg" for="names-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.surnames']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.objetoObtenido.usApellidos}" id="usernames-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.surnames'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="60" message="#{of:format2(translate['validation.betweenchar'], 5, 60)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />
+													<f:ajax event="keyup" render="surnamesMsg" />
+													<f:ajax event="blur" render="surnamesMsg" />
+												</h:inputText>
+												<h:message id="surnamesMsg" for="usernames-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['user.state']}:" />
+													</label>
+													<h:selectOneMenu value="#{usuariob.objetoObtenido.usEstado}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.selection'], translate['user.state'])}"
+														styleClass="custom-select" id="estado-i">
+														<f:selectItem itemLabel="#{translate['form.select']}"
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItem itemlabel="#{translate['state.enabled']}"
+															itemValue="Activo"></f:selectItem>
+														<f:selectItem itemlabel="#{translate['state.disabled']}"
+															itemValue="Inactivo"></f:selectItem>
+														<f:ajax event="change" render="estadoMsg" />
+													</h:selectOneMenu>
+													<br />
+													<h:message id="estadoMsg" for="estado-i"
+														styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['user.address']}:"/>
+												</label>
+												<h:inputText value="#{usuariob.objetoObtenido.usDireccion}"
+													styleClass="form-control" id="description-i">
+												</h:inputText>
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['user.rol']}:"/>
+												</label>
+												<h:selectOneMenu value="#{usuariob.objetoObtenido.rol.rolId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['user.rol'])}"
+													styleClass="custom-select" id="rol-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{rolb.obtenerLista()}"
+														var="r" itemLabel="#{r.rolNombre}" itemValue="#{r.rolId}" />
+													<f:ajax event="change" render="rolMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="rolMsg" for="rol-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['user.warehouse']}:"/>
+												</label>
+												<h:selectOneMenu value="#{usuariob.objetoObtenido.bodega.boId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['user.warehouse'])}"
+													styleClass="custom-select" id="warehouse-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{bodega.obtenerLista()}"
+														var="b" itemLabel="#{b.boId} - #{b.boDireccion}" itemValue="#{b.boId}" />
+													<f:ajax event="change" render="wareMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="wareMsg" for="warehouse-i" styleClass="validation-tooltip" />
+											</div>						    
+										    <div class="form-group col-12">
+											<div>
+											<o:outputLabel for="file" value="#{translate['user.img']}:" />					        
+										         <div class="custom-file">
+												    <o:inputFile id="file" value="#{usuariob.archivoImg}" class="custom-file-input cfie"
+										            accept="image/*" acceptMessage="#{translate['form.filetype ']} {2}"
+										            maxsize="#{1024 * 1024}" maxsizeMessage="#{translate['form.maxfilesize']} {2}">
+										            <f:ajax listener="#{usuariob.mostrarImgE}" render="resultEImg" />
+										        	</o:inputFile>
+												    <label class="custom-file-label cfle" for="file">#{translate['form.choosefile']}</label>
+												 </div>
+										    </div>
+										    <h:message id="file_m" for="file" styleClass="validation-tooltip" />
+
+										    <hr />
+										    <h:panelGrid columns="1" id="resultEImg" class="centerimg">
+										    <o:graphicImage value="#{usuariob.objetoObtenido.usImagen}" dataURI="true" width="100" height="100"
+										        rendered="#{not empty usuariob.objetoObtenido.usImagen}" style="border-radius: 50%" />
+										    </h:panelGrid>
+									        </div>
+											
+											
+										</div>
+							</div>
+							<script>
+								$(".cfie").on("change", function() {
+								  var fileName = $(this).val().split("\\").pop();
+								  $(this).siblings(".cfle").addClass("selected").html(fileName);
+								});
+							</script>
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">
+									<h:outputText value = "#{translate['form.cancel']}"/>
+								</button>
+								<h:commandButton action="#{usuariob.actualizar()}"
+									value="#{translate['form.update']}" styleClass="btn btn-success" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">
+								<h:outputText value = "#{translate['form.warning']}"/>
+							</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- PopUp body -->
+						<h:form id="deleteForm">
+							<div class="modal-body">
+								<p>
+									<span style="margin: 0 10px 0 0;"><img width="48"
+										src="../resources/images/SI/warning.png" /> </span> 
+										<h:outputText value = "#{of:format2(translate['form.confirmdelete'], translate['user'], usuariob.objetoObtenido.usNombreDeUsuario)}"/>
+								</p>
+							</div>
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">
+									<h:outputText value = "#{translate['form.cancel']}"/>
+									</button>
+
+								<h:commandLink actionListener="#{usuariob.eliminar()}"
+									styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+				<div class="modal fade" id="readModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<h:form id="readForm" enctype="multipart/form-data">
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel"><h:outputLabel value="#{usuariob.objetoObtenido.usNombreDeUsuario}" /></h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+							<div class="modal-body">
+									<div class="form-row" style="font-family: 'Poppins', sans-serif;">
+
+										<div class="form-group col-12" style="text-align: center">
+										<h2> ${translate['user']} ##{usuariob.objetoObtenido.usId} - #{usuariob.objetoObtenido.usNombreDeUsuario}</h2>
+											<o:graphicImage rendered="#{not empty usuariob.objetoObtenido.usImagen}" value="#{usuariob.objetoObtenido.usImagen}" dataURI="true" width="200" style="max-height: 400px; border-radius: 50%;" />
+											
+										</div>
+										<hr/>
+										<div class="form-group col-4" style="text-align: right"><b>${translate['user.email']}: </b></div>
+										<div class="form-group col-8">#{usuariob.objetoObtenido.usCorreo}</div>
+										<div class="form-group col-4" style="text-align: right"><b>${translate['user.names']}: </b></div>
+										<div class="form-group col-8">#{usuariob.objetoObtenido.usNombres}</div>
+										<div class="form-group col-4" style="text-align: right"><b>${translate['user.surnames']}: </b></div>
+										<div class="form-group col-8">#{usuariob.objetoObtenido.usApellidos}</div>
+									</div>
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">Cancelar</button>
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+			
+			</ui:fragment>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

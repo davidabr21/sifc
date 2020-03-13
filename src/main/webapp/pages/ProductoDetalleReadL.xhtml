@@ -1,0 +1,233 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<title>Bodega</title>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/landingPageTemplate.xhtml">
+		<f:metadata>
+			<f:viewParam name="id" value="#{producto.objetoObtenido.proId}" />
+        	<f:event type="preRenderView" listener="#{producto.obtenerProdCart()}"/>
+        	<f:event type="preRenderView" listener="#{pedido.obtenerUsuario(request.getSession(false).getAttribute('id'))}"/>
+      	</f:metadata>
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC #{translate['menu.cart']} - #{producto.objetoObtenido.proNombre}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="gridCarrito.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+			<style>
+				.hoverContainer{
+					background: rgb(5,5,5,0.2);
+					position: absolute;
+    				width: 100%;
+					display:none;
+					text-align: right;
+					padding: 2px;
+					z-index: 2;
+				}
+				.img-container:hover .hoverContainer{
+					display: block;
+				}
+				.img-pro-options{
+					filter: brightness(0) invert(1);
+				}
+				.carousel {
+				  height: 100%;
+				}
+				.imgcarousel{
+					max-height: 100%;  
+					max-width: 100%; 
+					position: absolute;  
+					top: 0;  
+					bottom: 0;  
+					left: 0;  
+					right: 0;  
+					margin: auto;
+				}
+				.carousel-control-next-icon, .carousel-control-prev-icon{
+					filter: brightness(50%);	
+				}
+				.ximg{
+				    position: absolute;
+				    border: 0;
+				    background: 0;
+				    color: #aaa;
+			    }
+			    .centerimg tbody tr td, .centerimg tbody tr{
+			    	display: flex;
+			    }
+			    .btn-group{
+			    	display: none
+			    }
+			    
+			    @media (min-width: 576px){
+			    #ModalAgregarProspecto .modal-dialog {
+				    max-width: 700px;
+				}
+			    }
+			    .dataTable, .dataTables_scrollHeadInner{
+			    	width: 100% !important;
+			    }
+			    .prospectoBadget{
+			        padding: 2px 16px;
+				    background-color: #fff;
+				    border: 1px solid #aaa;
+				    border-radius: 5px;
+		        	margin-bottom: 10px;
+   					display: inline-block;
+			    }
+			    .plus:hover, .minus:hover{
+			    	cursor: pointer;
+			    }
+			</style>
+			<script>
+			$( document ).ready(function() {
+				$('.carousel-inner .carousel-item:first-child').addClass('active');
+				$('.carousel').carousel('pause');
+			});
+			</script>
+
+			<div class="img-header" style="background: url(#{resource['images/pharma.jpg']}); background-size: cover; height: 180px; background-position-y: 300px;">
+				
+			</div>
+			<div class="main-container" style="padding: 0 100px; font-family: 'Poppins', sans-serif;">
+
+				<div style="position: relative; top: -80px; border: 1px solid #ccc; border-top-right-radius: .30rem; border-top-left-radius: .30rem;">
+				<nav aria-label="breadcrumb">
+				  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+				    <li class="breadcrumb-item"><a href="Carrito.xhtml">#{translate['menu.cart']}</a></li>
+				    <li class="breadcrumb-item"><a href="#">#{producto.objetoObtenido.tipoproducto.tpNombre}</a></li>
+				    <li class="breadcrumb-item active" aria-current="page">#{producto.objetoObtenido.proNombre}</li>
+				  </ol>
+				</nav>
+				
+				<div class="row" style="border: solid 1px #eee; margin: 0; padding: 10px 0; background-color: #f5f5f5;">
+					<div class="col-4 img-container">
+					<h:form>
+						<div style="position: relative">
+							<h:graphicImage rendered="#{empty producto.objetoObtenido.imagenporproductos}" library="images" class="card-img-top" name="noprimg.png" />
+							
+							<ui:fragment rendered="#{not empty producto.objetoObtenido.imagenporproductos}">
+							<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+							  <div class="carousel-inner">
+							  <ui:repeat value="#{producto.objetoObtenido.imagenporproductos.toArray()}" var="img">
+							    <div class="carousel-item" style="height: 300px;">
+							    
+									<o:graphicImage value="#{img.ipImagen}" dataURI="true" class="card-img-top imgcarousel"/>
+
+							    </div>
+							  </ui:repeat>
+							  </div>
+							  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+							    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							    <span class="sr-only">Previous</span>
+							  </a>
+							  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+							    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+							    <span class="sr-only">Next</span>
+							  </a>
+							</div>
+							</ui:fragment>
+							
+						</div>
+						</h:form>
+					</div>
+					<h:form style="display: contents">
+					<div class="col-8" style="border-left: 1px solid #ddd;">
+						<h3 style="margin-top: 35px"><b>#{producto.objetoObtenido.proNombre} #{producto.objetoObtenido.proContenido}#{producto.objetoObtenido.unidadmedida.umAbreviacion}</b></h3>
+						<h5>
+						<ui:fragment rendered="#{producto.objetoObtenido.proCantidad > 0}">Stock Disponible</ui:fragment>
+						<ui:fragment rendered="#{producto.objetoObtenido.proCantidad == 0}">Stock Agotado</ui:fragment>
+						
+						</h5>
+						
+						<hr/>
+						<h1>
+							<script>
+					    		let precio = #{producto.objetoObtenido.proPrecio};
+					    		var total = new Intl.NumberFormat('es-ES').format(precio);
+					    		document.write("$" + total);
+							</script>
+						</h1>
+						<p>
+							#{producto.objetoObtenido.proDescripcion}
+						</p>
+						<div class="form-group col-8" style="display: flex; padding: 0;">
+							<label class="col-4" style="margin-bottom: 0; padding-top: 7px;"><h:outputText value = "#{translate['product.quantity']} "/></label>
+							<h:inputText value="#{pedido.peCantidad}"
+								styleClass="form-control numberinp" style="margin-left: 0;"/>
+							  <div class="input-group-append">
+							    <span class="input-group-text plus">+</span>
+							    <span class="input-group-text minus">-</span>
+							  </div>
+							  
+						</div>
+						<h:link value = "Haz un pedido ahora, Registrate en 5 minutos" outcome= "registrar" style="color: #000"/>
+						<script type="text/javascript">
+							let number;
+							$(".plus").click(function(){
+								number = $(".numberinp").val();
+					    		let elemnt = document.createElement("div");
+					    		number++;
+					    		elemnt.innerHTML = number;
+					    		let value = elemnt.innerText;
+								$(".numberinp").val(value);
+							});
+							$(".minus").click(function(){
+								number = $(".numberinp").val();
+					    		let elemnt = document.createElement("div");
+					    		number--;
+					    		elemnt.innerHTML = number;
+					    		let value = elemnt.innerText;
+								$(".numberinp").val(value);
+							});
+						</script>
+					</div>
+					</h:form>
+				</div>
+				<div class="row" style="border: solid 1px #eee; margin: 0; padding: 10px 0; background-color: #f5f5f5;">
+					<div class="col-12">
+						<h4>#{translate['menu.leaflet']}</h4>
+						<p>
+						<h:form>
+							<ui:repeat value="#{producto.objetoObtenido.prospectos.toArray()}" var="prs">
+							<span class="prospectoBadget"><b>#{prs.prsNombre}: </b>#{prs.prsDescripcion} 
+							</span>
+							</ui:repeat>
+							<ui:fragment rendered="#{empty producto.objetoObtenido.prospectos}">
+								<p>Aún no existen prospectos asociados a este producto.</p>
+							</ui:fragment>
+						</h:form>
+						</p>
+					</div>
+						
+				</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

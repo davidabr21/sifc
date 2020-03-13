@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/sifc_dev?zeroDateTimeBehavior=convertToNull</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.search.autoregister_listeners">true</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+                <mapping class="com.duopharma.models.Lotemateriaprima" />
+        <mapping class="com.duopharma.models.Loteenvase" />
+        <mapping class="com.duopharma.models.Tipooperacion" />
+        <mapping class="com.duopharma.models.Laboratorio" />
+        <mapping class="com.duopharma.models.Lote" />
+        <mapping class="com.duopharma.models.Imagenporenvase" />
+        <mapping class="com.duopharma.models.Pedido" />
+        <mapping class="com.duopharma.models.Fichaelaboracionproducto" />
+        <mapping class="com.duopharma.models.Composicion" />
+        <mapping class="com.duopharma.models.Tipomateriaprima" />
+        <mapping class="com.duopharma.models.Prospecto" />
+        <mapping class="com.duopharma.models.Productosporpedido" />
+        <mapping class="com.duopharma.models.Proveedor" />
+        <mapping class="com.duopharma.models.Estanteria" />
+        <mapping class="com.duopharma.models.Fichaanaliticamateria" />
+        <mapping class="com.duopharma.models.Bodega" />
+        <mapping class="com.duopharma.models.Materiaprima" />
+        <mapping class="com.duopharma.models.Lotehistoriaestado" />
+        <mapping class="com.duopharma.models.Envase" />
+        <mapping class="com.duopharma.models.Tipoproducto" />
+        <mapping class="com.duopharma.models.Movimientoproducto" />
+        <mapping class="com.duopharma.models.Usuario" />
+        <mapping class="com.duopharma.models.Tipodocumento" />
+        <mapping class="com.duopharma.models.Formula" />
+        <mapping class="com.duopharma.models.Imagenporproducto" />
+        <mapping class="com.duopharma.models.Protocoloelaboracion" />
+        <mapping class="com.duopharma.models.Rol" />
+        <mapping class="com.duopharma.models.Producto" />
+        <mapping class="com.duopharma.models.Unidadmedida" />
+        <mapping class="com.duopharma.models.Formafarmaceutica" />
+        <mapping class="com.duopharma.models.Movimientomateria" />
+        <mapping class="com.duopharma.models.Vistaproducto" />
+        <mapping class="com.duopharma.models.Vistaestanteria" />
+        <mapping class="com.duopharma.models.Vistaestanteriacapacidad" />
+        <mapping class="com.duopharma.models.Vistausuario"/>
+        <mapping class="com.duopharma.models.Vistamateriaprima"/>
+        <mapping class="com.duopharma.models.Materialfabricacionproducto" />
+        <mapping class="com.duopharma.models.Prospectosporproducto" />
+        <mapping class="com.duopharma.models.ProspectosporproductoId" />
+    </session-factory>
+</hibernate-configuration>

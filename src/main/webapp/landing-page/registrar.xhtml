@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<ui:composition
+		template="../resources/templates/landingPageTemplate.xhtml">
+		<ui:define name="mainContain">
+			<h:outputStylesheet library="css" name="bootstrap.min.css"  />
+			<style>
+				.register-box{
+					background-color: #f2f2f2;
+					padding: 40px;
+					width: 80%;
+					margin: auto;
+					font-family: 'Poppins', sans-serif;
+					font-size: 15px;
+					border-radius: 30px;
+				}
+				.validation-tooltip {
+				    color: #242424;
+				    position: absolute;
+				    background-color: #ffd2d2;
+				    font-size: 12px;
+				    padding: 1px 5px;
+				    border-radius: 7px;
+				    margin-top: 5px;
+				    border: 1px solid #fb8080;
+				    z-index: 1;
+				}
+			</style>
+			<script type="text/javascript" src="resources/js/validacion.js"></script>
+			<iframe width="0" height="0" border="0" name="frame"
+				style="position: absolute;" id="frame"></iframe>
+			<div class="principal">
+				<div class="main-container-l">
+					<div class="register-box">
+						<h:form name="form" enctype="multipart/form-data">
+						 	<f:passThroughAttribute name="autocomplete" value="off"/>
+							<h2 style="text-align: center; margin-bottom: 10px">Registrate Ahora</h2>
+							<hr/>
+							<div class="form-row">
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.username']}:"/>
+												</label>
+												<h:inputText value="#{cliente.usNombreDeUsuario}" id="username-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.username'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="50" message="#{of:format2(translate['validation.betweenchar'], 5, 50)}" />
+													<f:ajax event="keyup" render="usernameMsg" />
+													<f:ajax event="blur" render="usernameMsg" />
+												</h:inputText>
+												<h:message id="usernameMsg" for="username-i" styleClass="validation-tooltip" />
+												
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.password']}:"/>
+												</label>
+												<h:inputSecret value="#{cliente.usClave}" id="pass-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.password'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="50" message="#{of:format2(translate['validation.betweenchar'], 5, 50)}" />
+													<f:ajax event="keyup" render="passMsg" />
+													<f:ajax event="blur" render="passMsg" />
+												</h:inputSecret>
+												<h:message id="passMsg" for="pass-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-12">
+												<label>
+												<h:outputText value = "#{translate['user.email']}:"/>
+												</label>
+												<h:inputText value="#{cliente.usCorreo}" id="email-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.email'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="90" message="#{of:format2(translate['validation.betweenchar'], 5, 90)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" message="#{translate['form.emailformat']}" />
+													<f:ajax event="keyup" render="emailMsg" />
+													<f:ajax event="blur" render="emailMsg" />
+												</h:inputText>
+												<h:message id="emailMsg" for="email-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.names']}:"/>
+												</label>
+												<h:inputText value="#{cliente.usNombres}" id="names-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.names'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="60" message="#{of:format2(translate['validation.betweenchar'], 5, 60)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />													<f:ajax event="keyup" render="namesMsg" />
+													<f:ajax event="blur" render="namesMsg" />
+												</h:inputText>
+												<h:message id="namesMsg" for="names-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['user.surnames']}:"/>
+												</label>
+												<h:inputText value="#{cliente.usApellidos}" id="usernames-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['user.surnames'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="60" message="#{of:format2(translate['validation.betweenchar'], 5, 60)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />
+													<f:ajax event="keyup" render="surnamesMsg" />
+													<f:ajax event="blur" render="surnamesMsg" />
+												</h:inputText>
+												<h:message id="surnamesMsg" for="usernames-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['user.address']}:"/>
+												</label>
+												<h:inputText value="#{cliente.usDireccion}"
+													styleClass="form-control" id="description-i">
+												</h:inputText>
+											</div>
+											<div class="form-group col-6">
+													<label>#{translate['customer.phone']}:</label>
+													<h:inputText value="#{cliente.usTelefono}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['warehouse.phone'])}"
+														styleClass="form-control" id="temperature-i"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="0" maximum="4000000000"
+															message="#{of:format2(translate['validation.betweennum'], 0, 4000000000)}" />
+														<f:ajax event="keyup" render="tempMsg" />
+														<f:ajax event="blur" render="tempMsg" />
+													</h:inputText>
+													<h:message id="tempMsg" for="temperature-i"
+														styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+													<label>#{translate['customer.doc']}:</label>
+													<h:inputText value="#{cliente.usDocumento}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['customer.doc'])}"
+														styleClass="form-control" id="docu-i"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="0" maximum="9999999999"
+															message="#{of:format2(translate['validation.betweennum'], 0, 9999999999)}" />
+														<f:ajax event="keyup" render="docuMsg" />
+														<f:ajax event="blur" render="docuMsg" />
+													</h:inputText>
+													<h:message id="docuMsg" for="docu-i"
+														styleClass="validation-tooltip" />
+											</div>
+											
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['customer.doctype']}:"/>
+												</label>
+												<h:selectOneMenu value="#{cliente.tdId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['user.warehouse'])}"
+													styleClass="custom-select" id="warehouse-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{tipodoc.obtenerLista()}"
+														var="b" itemLabel="#{b.tdId} - #{b.tdNombre}" itemValue="#{b.tdId}" />
+													<f:ajax event="change" render="wareMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="wareMsg" for="warehouse-i" styleClass="validation-tooltip" />
+											</div>
+
+											
+											<div class="form-group col-12">
+											<div>
+											<o:outputLabel for="file" value="Image: " />					        
+										         <div class="custom-file">
+												    <o:inputFile id="file" value="#{cliente.archivoImg}" class="custom-file-input cfi"
+										            accept="image/*" acceptMessage="#{translate['form.filetype ']} {2}"
+										            maxsize="#{1024 * 1024}" maxsizeMessage="#{translate['form.maxfilesize']} {2}">
+										            <f:ajax listener="#{cliente.mostrarImg}" render="resultImg" />
+										        	</o:inputFile>
+												    <label class="custom-file-label cfl" for="file">#{translate['form.choosefile']}</label>
+												 </div>
+										        <h:message id="file_m" for="file" />
+										    </div>
+										    <hr />
+										    <h:panelGrid columns="1" id="resultImg" class="centerimg">
+										    <o:graphicImage value="#{cliente.usImagen}" dataURI="true" width="100" height="100"
+										        rendered="#{not empty cliente.usImagen}" style="border-radius: 50%" />
+										    </h:panelGrid>
+									        </div>
+									        <hr/>
+									        <div class="form-group col-12" style="text-align: right">
+									        	<h:link type="button" class="btn btn-danger"
+													data-dismiss="modal" style="margin-right: 5px">
+													<h:outputText value = "#{translate['form.cancel']}"/>
+													</h:link>
+				
+												<h:commandLink actionListener="#{cliente.registrar()}"
+													styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+									        </div>
+									</div>
+									<script>
+									// Add the following code if you want the name of the file appear on select
+									$(".cfi").on("change", function() {
+									  var fileName = $(this).val().split("\\").pop();
+									  $(this).siblings(".cfl").addClass("selected").html(fileName);
+									});
+									</script>
+							
+						</h:form>
+
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

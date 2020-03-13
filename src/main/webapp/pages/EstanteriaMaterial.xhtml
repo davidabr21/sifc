@@ -1,0 +1,738 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.rackm']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<ui:fragment
+				rendered="#{request.getSession(false).getAttribute('Admin') != null}">
+
+				<link rel="stylesheet" type="text/css" href="../resources/css/gridpages.css" />
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/dashboard.css" />
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/bootstrap.min.css" />
+				<script src="../resources/js/jquery.min.js"></script>
+				<script src="../resources/js/bootstrap.min.js"></script>
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+				<style>
+				.column4, .column5 {
+					width: 30px;
+				}
+				</style>
+				<script src="../resources/js/script.js" type="text/javascript"></script>
+				<div class="img-header" style="background: url(#{resource['images/stock.jpeg']}); background-size: cover; height: 180px; background-position-y: 220px;">
+					
+				</div>
+				<div class="main-container">
+					<div class="grid-container" style="width: 90%;">
+					<nav aria-label="breadcrumb">
+						  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+					   <li class="breadcrumb-item">#{translate['menu.stocking']}</li>
+						  <li class="breadcrumb-item"><a href="Bodega.xhtml">#{translate['menu.warehouse']}</a></li>
+						  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.rackm']}</li>
+						  </ol>
+					</nav>
+
+						<h:form id="mainForm">
+
+
+							<nav class="top-grid-bar">
+
+							<div class="action-bar">
+								<a data-toggle="modal" data-target="#ModalAgregar"
+									href="#exampleModal"><h:graphicImage library="images"
+										style="width: 24px" name="SI/Grid/add.png" /></a>
+							</div>
+
+							</nav>
+
+							<h:dataTable value="#{estanteria.obtenerListaMateriales()}" var="obj"
+								styleClass="main-grid table table-striped table-sm"
+								id="main-grid"
+								columnClasses="column1, column2, column3, column4, column5">
+
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="Id" />
+									</f:facet>
+									<h:outputLabel value="#{obj.estId}" style="margin-bottom: 0;" />
+								</h:column>
+								
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.code']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.estCodigo}" style="margin-bottom: 0;" />
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.capacity']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.estCapacidad}"
+										style="margin-bottom: 0;" />
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.occupiedcapacity']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.estCapacidadOcupada}"
+										style="margin-bottom: 0;" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.state']}" />
+									</f:facet>
+									<h:outputLabel rendered="#{obj.estEstado == 'Activo'}" value="">
+									<span class="full-stock state">&nbsp;</span>
+									<h:outputText value="#{translate['state.enabled']}" />
+								</h:outputLabel>
+								<h:outputLabel rendered="#{obj.estEstado == 'Inactivo'}" value="">
+									<span class="low-stock state">&nbsp;</span>
+									<h:outputText value="#{translate['state.disabled']}" />
+								</h:outputLabel>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.address']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.bodega.boNombre}"
+										style="margin-bottom: 0;" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.matname']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.materiaprima.mpNombre}"
+										style="margin-bottom: 0;" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.humidity']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.estHumedad}"
+										style="margin-bottom: 0;" />%
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rack.temperature']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.estTemperatura}"
+										style="margin-bottom: 0;" />°C
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+									</f:facet>
+
+									<h:commandLink value=""
+										actionListener="#{estanteria.leer(obj)}"
+										styleClass="modifyBtn">
+										<f:passThroughAttribute name="data-toggle" value="modal" />
+										<f:passThroughAttribute name="href" value="#modalDelete" />
+										<f:ajax render="deleteForm" />
+										<h:graphicImage library="images" style="width: 24px"
+											name="SI/Grid/remove.png" />
+									</h:commandLink>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">
+									</f:facet>
+
+									<h:commandLink value=""
+										actionListener="#{estanteria.leer(obj)}"
+										styleClass="modifyBtn">
+										<f:passThroughAttribute name="data-toggle" value="modal" />
+										<f:passThroughAttribute name="href" value="#EditModal" />
+										<f:ajax render="editForm" />
+										<h:graphicImage library="images" style="width: 24px"
+											name="SI/Grid/edit.png" />
+									</h:commandLink>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+									</f:facet>
+									<a onclick="hola();">
+									<h:commandLink value=""
+										actionListener="#{estanteria.leer(obj)}"
+										styleClass="modifyBtn displayChart" id="chartg">
+										<f:passThroughAttribute name="data-toggle" value="modal"/>
+										<f:passThroughAttribute name="href" value="#ModalPie" />
+										<f:ajax render="hiddenform" />
+										<h:graphicImage library="images" style="width: 24px"
+											name="charts.png" />
+									</h:commandLink>
+									</a>
+								</h:column>
+
+							</h:dataTable>
+							<div id="pager"></div>
+							<div class="modal fade" id="ModalAgregar" tabindex="-1"
+								role="dialog" aria-labelledby="exampleModalLabel"
+								aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+
+										<!-- PopUp Header -->
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">
+												<h:outputText
+													value="#{translate['form.add']} #{translate['rackm']}" />
+											</h5>
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<!-- PopUp body -->
+										<div class="modal-body">
+
+											<div class="form-row">
+												<div class="form-group col-6">
+													<label><h:outputText value="Id:" /></label>
+													<h:inputText disabled="true" value="#{estanteria.estanteria.estId}"
+														styleClass="form-control" />
+												</div>
+												<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['rack.code']}:" />
+													</label>
+													<h:inputText value="#{estanteria.estanteria.estCodigo}"
+														id="code-i" styleClass="form-control" required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['rack.capacity'])}"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="0" maximum="100000"
+															message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+														<f:ajax event="keyup" render="codeMsg" />
+														<f:ajax event="blur" render="codeMsg" />
+													</h:inputText>
+													<h:message id="codeMsg" for="code-i"
+														styleClass="validation-tooltip" />
+												</div>
+												<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['rack.capacity']}:" />
+													</label>
+													<h:inputText value="#{estanteria.estanteria.estCapacidad}"
+														id="capacity-i" styleClass="form-control" required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['rack.capacity'])}"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="0" maximum="1000"
+															message="#{of:format2(translate['validation.betweennum'], 0, 1000)}" />
+														<f:ajax event="keyup" render="capacityMsg" />
+														<f:ajax event="blur" render="capacityMsg" />
+													</h:inputText>
+													<h:message id="capacityMsg" for="capacity-i"
+														styleClass="validation-tooltip" />
+
+												</div>
+												<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['rack.occupiedcapacity']}:" />
+													</label>
+													<h:inputText value="#{estanteria.estanteria.estCapacidadOcupada}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['rack.occupiedcapacity'])}"
+														styleClass="form-control" id="capacityo-i"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="0" maximum="1000"
+															message="#{of:format2(translate['validation.betweennum'], 0, 1000)}" />
+														<f:ajax event="keyup" render="capacityoMsg" />
+														<f:ajax event="blur" render="capacityoMsg" />
+													</h:inputText>
+													<h:message id="capacityoMsg" for="capacityo-i"
+														styleClass="validation-tooltip" />
+												</div>
+												<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['rack.state']}:" />
+													</label>
+													<h:selectOneMenu value="#{estanteria.estanteria.estEstado}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.state'])}"
+														styleClass="custom-select" id="estado-i">
+														<f:selectItem itemLabel="#{translate['form.select']}"
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItem itemLabel="#{translate['state.enabled']}"
+															itemValue="Activo"></f:selectItem>
+														<f:selectItem itemLabel="#{translate['state.disabled']}"
+															itemValue="Inactivo"></f:selectItem>
+														<f:ajax event="change" render="estadoMsg" />
+													</h:selectOneMenu>
+													<br />
+													<h:message id="estadoMsg" for="estado-i"
+														styleClass="validation-tooltip" />
+												</div>
+												<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['rack.address']}:" />
+													</label>
+													
+													<h:selectOneMenu value="#{estanteria.boId}" required="true"
+														requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.address'])}"
+														styleClass="custom-select" id="bodega-i">
+														<f:selectItem itemLabel="#{translate['form.select']}"
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItems value="#{bodega.obtenerLista()}" var="b"
+															itemLabel="#{b.boNombre} - #{b.boDireccion}"
+															itemValue="#{b.boId}" />
+														<f:ajax event="change" render="bodegaMsg" />
+													</h:selectOneMenu>
+													<br />
+													<h:message id="bodegaMsg" for="bodega-i"
+														styleClass="validation-tooltip" />
+												</div>
+												<div class="form-group col-12">
+													<label> <h:outputText
+															value="#{translate['rack.matname']}:" />
+													</label>
+													<h:selectOneMenu value="#{estanteria.mpId}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.matname'])}"
+														styleClass="custom-select" id="materia-i">
+														<f:selectItem itemLabel="#{translate['form.select']}"
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItems value="#{materiaprima.obtenerLista()}" var="mp"
+															itemLabel="ID #{mp.mpId} - #{mp.mpNombre}"
+															itemValue="#{mp.mpId}" />
+														<f:ajax event="change" render="mpMsg" />
+													</h:selectOneMenu>
+													<br />
+													<h:message id="mpMsg" for="materia-i"
+														styleClass="validation-tooltip" />
+												</div>
+												<div class="col-12 row" style="margin: 0; padding: 0">
+													<div class="form-group col-10" style="padding: 0 5px;">
+													<label>#{translate['rack.temperature']}</label>
+													<h:inputText id="rangeT" styleClass="form-control-range" value="#{estanteria.estanteria.estTemperatura}">
+												        <!-- f:passThroughAttributes value="#{html5Bean.attrs}"/ -->
+												        <f:passThroughAttributes value="#{{'type':'range', 'min':'-40', 'max':'40', 'step':'1'}}"/>
+												        <f:passThroughAttribute name="onchange" value="updateTemperature(this.value)"/>
+												        <f:convertNumber minFractionDigits="0"/>
+												    </h:inputText><br/>
+												   
+													</div>
+													<div class="form-group col-2" style="padding: 0 5px;">
+													<label></label>
+													 <input class="form-control" type="text" id="temperatureInput" disabled="true" value="" />
+													</div>
+												</div>
+												<div class="col-12 row" style="margin: 0; padding: 0">
+													<div class="form-group col-10" style="padding: 0 5px;">
+													<label>#{translate['rack.humidity']}</label>
+													<h:inputText id="rangeH" styleClass="form-control-range" value="#{estanteria.estanteria.estHumedad}">
+												        <!-- f:passThroughAttributes value="#{html5Bean.attrs}"/ -->
+												        <f:passThroughAttributes value="#{{'type':'range', 'min':'0', 'max':'100', 'step':'1'}}"/>
+												        <f:passThroughAttribute name="onchange" value="updateHumidity(this.value)"/>
+												        <f:convertNumber minFractionDigits="0"/>
+												    </h:inputText><br/>
+												   
+													</div>
+													<div class="form-group col-2" style="padding: 0 5px;">
+													<label></label>
+													 <input class="form-control" type="text" id="humidityInput" disabled="true" value="" />
+													</div>
+												</div>
+											</div>
+
+										</div>
+										<script>
+										function updateTemperature(val) {
+									          document.getElementById('temperatureInput').value=val + "°C"; 
+								        }
+										function updateHumidity(val) {
+									          document.getElementById('humidityInput').value=val + "%"; 
+								        }
+										</script>
+										<!-- PopUp footer -->
+										<div class="modal-footer">
+											<button type="button" class="btn btn-danger"
+												data-dismiss="modal">
+												<h:outputText value="#{translate['form.cancel']}" />
+											</button>
+											<h:commandButton value="#{translate['form.submit']}"
+												id="submit-button" action="#{estanteria.registrar()}"
+												styleClass="btn btn-success">
+											</h:commandButton>
+										</div>
+									</div>
+								</div>
+							</div>
+						</h:form>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="GeneratedImg" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+					<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">
+						<h:outputText value="#{translate['form.pnggenerate']}"/>
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					</div>
+					<div class="modal-body">
+						<a style="display: none" id="downloadlink" href="#" download="#{translate['rack.chart.title']} #{estanteria.objetoObtenido.estId} - #{translate['rackm']} #{estanteria.objetoObtenido.boId}.png">
+						<h:outputText value="#{translate['form.download']}"/> <img src="" id="fromcanvas"></img></a>
+					</div>
+				</div></div></div>
+				<div class="modal fade" id="ModalPie" tabindex="-1" role="dialog"
+								aria-labelledby="exampleModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+								<h:form id="hiddenform">
+									<div class="modal-content">
+									<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">
+												<h:outputText
+													value=" #{translate['rack.chart.title']} #{estanteria.objetoObtenido.estId} - #{translate['rackm']} #{estanteria.objetoObtenido.boId}"/>
+											</h5>
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+												<h:inputHidden value="#{estanteria.objetoObtenido.estCapacidad}"
+													styleClass="form-control" 
+													id="hidden-cap"/>
+												<h:inputHidden value="#{estanteria.objetoObtenido.estCapacidadOcupada}"
+													styleClass="form-control" 
+													id="hidden-capO"/>
+											<a onclick="exportImageAsPNG()" data-dismiss="modal" data-toggle="modal" href="#GeneratedImg">Generar PNG</a>
+											<div id="chart"></div>
+											<script type="text/javascript">
+											$( document ).ready(function() {
+											$( ".displayChart" ).click(function() {
+												dada();
+												});
+											});
+											function dada () {
+												  return new Promise(resolve => {
+												    setTimeout(() => {
+													    let y = document.getElementById("hiddenform:hidden-capO").value;
+													    let x = document.getElementById("hiddenform:hidden-cap").value - y;
+												    	var chart = c3.generate({
+														    bindto: '#chart',
+														    data: {
+														    	columns: [
+														    		['Capacidad Restante', x],
+														            ['Capacidad Ocupada', y]														            
+														            ],
+														        type: "pie"
+														    },
+														    pie: {
+														        label: {
+														          format: function(value, ratio, id) {
+														            return value;
+														          }
+														        }
+													      },
+													    	tooltip: {
+													            format: {
+													                title: function (d) { return "Porcentaje" }
+													                }
+												            }
+												    	
+														});
+												    }, 800);
+												  });
+												};
+												function exportImageAsPNG(){
+											        var svgElements = $("#chart").find('svg');
+											        var svg ;
+											        svgElements.each(function() {
+											            svg = this;
+											        });
+											        var img = document.getElementById("fromcanvas");
+											        svg.toDataURL("image/png", {
+											            callback: function(data) {
+											                img.setAttribute("src", data)
+											                document.getElementById("downloadlink").href = data;
+											                document.getElementById("downloadlink").style.display = "block";
+											            }
+											        })
+											        
+											    };
+											</script>
+										</div>
+									</div>
+									</h:form>
+								</div>
+							</div>
+
+				<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+
+							<!-- PopUp Header -->
+							<h:form id="editForm">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">
+										<h:outputText
+											value="#{translate['form.edit']} #{translate['rackm']}: " />
+										<i><h:outputText
+												value="#{estanteria.objetoObtenido.estId}" /></i>
+									</h5>
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+
+								<div class="modal-body">
+									<div class="form-row">
+										<div class="form-group col-6">
+											<label><h:outputText value="Id:" /></label>
+											<h:inputText disabled="true"
+												value="#{estanteria.objetoObtenido.estId}"
+												styleClass="form-control" />
+										</div>
+										<div class="form-group col-6">
+													<label> <h:outputText
+															value="#{translate['rack.code']}:" />
+													</label>
+													<h:inputText value="#{estanteria.objetoObtenido.estCodigo}"
+														id="code-i" styleClass="form-control" required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['rack.capacity'])}"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="0" maximum="100000"
+															message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+														<f:ajax event="keyup" render="codeMsg" />
+														<f:ajax event="blur" render="codeMsg" />
+													</h:inputText>
+													<h:message id="codeMsg" for="code-i"
+														styleClass="validation-tooltip" />
+											</div>
+										<div class="form-group col-6">
+											<label> <h:outputText
+													value="#{translate['rack.capacity']}:" />
+											</label>
+											<h:inputText
+												value="#{estanteria.objetoObtenido.estCapacidad}"
+												id="capacity-i" styleClass="form-control" required="true"
+												requiredMessage="#{of:format1(translate['validation.required'], translate['rack.capacity'])}"
+												converterMessage="#{translate['validation.onlyNums']}">
+												<o:validator validatorId="javax.faces.LongRange" minimum="0"
+													maximum="1000"
+													message="#{of:format2(translate['validation.betweennum'], 0, 1000)}" />
+												<f:ajax event="keyup" render="capacityMsg" />
+												<f:ajax event="blur" render="capacityMsg" />
+											</h:inputText>
+											<h:message id="capacityMsg" for="capacity-i"
+												styleClass="validation-tooltip" />
+
+										</div>
+										<div class="form-group col-6">
+											<label> <h:outputText
+													value="#{translate['rack.occupiedcapacity']}:" />
+											</label>
+											<h:inputText
+												value="#{estanteria.objetoObtenido.estCapacidadOcupada}"
+												required="true"
+												requiredMessage="#{of:format1(translate['validation.required'], translate['rack.occupiedcapacity'])}"
+												styleClass="form-control" id="capacityo-i"
+												converterMessage="#{translate['validation.onlyNums']}">
+												<o:validator validatorId="javax.faces.LongRange" minimum="0"
+													maximum="1000"
+													message="#{of:format2(translate['validation.betweennum'], 0, 1000)}" />
+												<f:ajax event="keyup" render="capacityoMsg" />
+												<f:ajax event="blur" render="capacityoMsg" />
+											</h:inputText>
+											<h:message id="capacityoMsg" for="capacityo-i"
+												styleClass="validation-tooltip" />
+										</div>
+										<div class="form-group col-6">
+											<label> <h:outputText
+													value="#{translate['rack.state']}:" />
+											</label>
+											<h:selectOneMenu
+												value="#{estanteria.objetoObtenido.estEstado}"
+												required="true"
+												requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.state'])}"
+												styleClass="custom-select" id="estado-i">
+												<f:selectItem itemLabel="#{translate['form.select']}"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItem itemlabel="#{translate['state.enabled']}"
+													itemValue="Activo"></f:selectItem>
+												<f:selectItem itemlabel="#{translate['state.disabled']}"
+													itemValue="Inactivo"></f:selectItem>
+												<f:ajax event="change" render="estadoMsg" />
+											</h:selectOneMenu>
+											<br />
+											<h:message id="estadoMsg" for="estado-i"
+												styleClass="validation-tooltip" />
+										</div>
+										<div class="form-group col-6">
+											<label> <h:outputText
+													value="#{translate['rack.address']}:" />
+											</label>
+											<h:selectOneMenu value="#{estanteria.objetoObtenido.bodega.boId}"
+												required="true"
+												requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.address'])}"
+												styleClass="custom-select" id="bodega-i">
+												<f:selectItem itemLabel="#{translate['form.select']}"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItems value="#{bodega.obtenerLista()}" var="b"
+													itemLabel="#{b.boNombre} - #{b.boDireccion}"
+													itemValue="#{b.boId}" />
+												<f:ajax event="change" render="bodegaMsg" />
+											</h:selectOneMenu>
+											<br />
+											<h:message id="bodegaMsg" for="bodega-i"
+												styleClass="validation-tooltip" />
+										</div>
+										<div class="form-group col-12">
+													<label> <h:outputText
+															value="#{translate['rack.matname']}:" />
+													</label>
+													<h:selectOneMenu value="#{estanteria.objetoObtenido.materiaprima.mpId}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.matname'])}"
+														styleClass="custom-select" id="materia-i">
+														<f:selectItem itemLabel="#{translate['form.select']}"
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItems value="#{materiaprima.obtenerLista()}" var="mp"
+															itemLabel="ID #{mp.mpId} - #{mp.mpNombre}"
+															itemValue="#{mp.mpId}" />
+														<f:ajax event="change" render="mpMsg" />
+													</h:selectOneMenu>
+													<br />
+													<h:message id="mpMsg" for="materia-i"
+														styleClass="validation-tooltip" />
+												</div>
+										
+										<div class="col-12 row" style="margin: 0; padding: 0">
+													<div class="form-group col-10" style="padding: 0 5px;">
+													<label>#{translate['rack.temperature']}</label>
+													<h:inputText id="rangeT" styleClass="form-control-range" value="#{estanteria.objetoObtenido.estTemperatura}">
+												        <!-- f:passThroughAttributes value="#{html5Bean.attrs}"/ -->
+												        <f:passThroughAttributes value="#{{'type':'range', 'min':'-40', 'max':'40', 'step':'1'}}"/>
+												        <f:passThroughAttribute name="onchange" value="updateUTemperature(this.value)"/>
+												        <f:convertNumber minFractionDigits="0"/>
+												    </h:inputText><br/>
+												   
+													</div>
+													<div class="form-group col-2" style="padding: 0 5px;">
+													<label></label>
+													 <input class="form-control" type="text" id="temperatureUInput" disabled="true" value="" />
+													</div>
+												</div>
+												<div class="col-12 row" style="margin: 0; padding: 0">
+													<div class="form-group col-10" style="padding: 0 5px;">
+													<label>#{translate['rack.humidity']}</label>
+													<h:inputText id="rangeH" styleClass="form-control-range" value="#{estanteria.objetoObtenido.estHumedad}">
+												        <!-- f:passThroughAttributes value="#{html5Bean.attrs}"/ -->
+												        <f:passThroughAttributes value="#{{'type':'range', 'min':'0', 'max':'100', 'step':'1'}}"/>
+												        <f:passThroughAttribute name="onchange" value="updateUHumidity(this.value)"/>
+												        <f:convertNumber minFractionDigits="0"/>
+												    </h:inputText><br/>
+												   
+													</div>
+													<div class="form-group col-2" style="padding: 0 5px;">
+													<label></label>
+													 <input class="form-control" type="text" id="humidityUInput" disabled="true" value="" />
+													</div>
+												</div>
+									</div>
+										<script>
+										function updateUTemperature(val) {
+									          document.getElementById('temperatureUInput').value=val + "°C"; 
+								        }
+										function updateUHumidity(val) {
+									          document.getElementById('humidityUInput').value=val + "%"; 
+								        }
+								        function loadRangeValues(){
+									        var s = document.getElementById('humidityUInput').value;
+									        alert(s);
+										}
+										</script>
+								</div>
+
+								<!-- PopUp footer -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger"
+										data-dismiss="modal">
+										<h:outputText value="#{translate['form.cancel']}" />
+									</button>
+									<h:commandButton action="#{estanteria.actualizar()}"
+										value="#{translate['form.update']}"
+										styleClass="btn btn-success" />
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal fade" id="modalDelete">
+					<div class="modal-dialog">
+						<div class="modal-content">
+
+							<!-- PopUp Header -->
+							<div class="modal-header">
+								<h4 class="modal-title">
+									<h:outputText value="#{translate['form.warning']}" />
+								</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<!-- PopUp body -->
+							<h:form id="deleteForm">
+								<div class="modal-body">
+									<p>
+										<span style="margin: 0 10px 0 0;"><img width="48"
+											src="../resources/images/SI/warning.png" /> </span>
+										<h:outputText
+											value="#{of:format2(translate['form.confirmdeletef'], translate['rackm'], estanteria.objetoObtenido.estId)}" />
+									</p>
+								</div>
+								<!-- PopUp footer -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger"
+										data-dismiss="modal">
+										<h:outputText value="#{translate['form.cancel']}" />
+									</button>
+
+									<h:commandLink actionListener="#{estanteria.eliminar()}"
+										styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</ui:fragment>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

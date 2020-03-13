@@ -1,0 +1,397 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<title>Bodega</title>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.warehouse']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+			<style>
+			.column5, .column6 {
+				width: 30px;
+			}
+			</style>
+				<div class="img-header" style="background: url(#{resource['images/stock.jpeg']}); background-size: cover; height: 180px; background-position-y: 220px;">
+					
+				</div>
+				<div class="main-container">
+					<div class="grid-container" style="width: 90%;">
+					<nav aria-label="breadcrumb">
+						  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+						  <li class="breadcrumb-item">#{translate['menu.stocking']}</li>
+						  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.warehouse']}</li>
+						  </ol>
+					</nav>
+
+					<h:form id="mainForm">
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+							<a data-toggle="modal" data-target="#ModalAgregar"
+								href="#exampleModal"><img width="24"
+								src="../resources/images/SI/Grid/add.png" /></a>
+						</div>
+						</nav>
+
+						<h:dataTable value="#{bodega.obtenerLista()}" var="obj"
+							styleClass="main-grid table table-striped table-sm"
+							id="main-grid"
+							columnClasses="column1, column2, column3, column4, column5, column6">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								<h:outputLabel value="#{obj.boId}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['warehouse.name']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.boNombre}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['warehouse.address']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.boDireccion}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['warehouse.phone']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.boTelefono}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['warehouse.state']}" />
+								</f:facet>
+								<h:outputLabel rendered="#{obj.boEstado == true}" value="">
+									<span class="full-stock state">&nbsp;</span>
+									<h:outputText value="#{translate['state.enabled']}" />
+								</h:outputLabel>
+								<h:outputLabel rendered="#{obj.boEstado == false}" value="">
+									<span class="low-stock state">&nbsp;</span>
+									<h:outputText value="#{translate['state.disabled']}" />
+								</h:outputLabel>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{bodega.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#modalDelete" />
+									<f:ajax render="deleteForm" />
+									<img width="24" src="../resources/images/SI/Grid/remove.png" />
+								</h:commandLink>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{bodega.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#EditModal" />
+									<f:ajax render="editForm" />
+									<img width="24" src="../resources/images/SI/Grid/edit.png" />
+								</h:commandLink>
+							</h:column>
+
+						</h:dataTable>
+
+						<!-- POP UP PARA CREACIÓN/EDICIÓN -->
+						<!-- El PopUp -->
+						<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">
+											<h:outputText
+												value="#{translate['form.add']} #{translate['warehouse']}" />
+										</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- PopUp body -->
+									<div class="modal-body">
+
+										<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>Id:</label>
+												<h:inputText disabled="true" value="#{bodega.bodega.boId}"
+													styleClass="form-control" />
+											</div>
+											
+											<div class="form-group col-6">
+												<label>#{translate['warehouse.name']}:</label>
+												<h:inputText value="#{bodega.bodega.boNombre}" id="hum-i" required="true"
+												requiredMessage="#{of:format1(translate['validation.required'], translate['warehouse.name'])}"
+													styleClass="form-control">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="100" message="#{of:format2(translate['validation.betweenchar'], 3, 100)}" />
+													<f:ajax event="keyup" render="humMsg" />
+													<f:ajax event="blur" render="humMsg" />
+												</h:inputText>
+												<h:message id="humMsg" for="hum-i"
+														styleClass="validation-tooltip" />
+											</div>
+
+											<div class="form-group col-6">
+												<label>#{translate['warehouse.address']}:</label>
+												<h:inputText value="#{bodega.bodega.boDireccion}" id="address-i" required="true"
+												requiredMessage="#{of:format1(translate['validation.required'], translate['warehouse.address'])}"
+													styleClass="form-control">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="90" message="#{of:format2(translate['validation.betweenchar'], 5, 100)}" />
+													<f:ajax event="keyup" render="addressMsg" />
+													<f:ajax event="blur" render="addressMsg" />
+												</h:inputText>
+												<h:message id="addressMsg" for="address-i"
+														styleClass="validation-tooltip" />
+											</div>
+
+
+											<div class="form-group col-6">
+													<label>#{translate['warehouse.phone']}:</label>
+													<h:inputText value="#{bodega.bodega.boTelefono}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['warehouse.phone'])}"
+														styleClass="form-control" id="temperature-i"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="0" maximum="4000000000"
+															message="#{of:format2(translate['validation.betweennum'], 0, 4000000000)}" />
+														<f:ajax event="keyup" render="tempMsg" />
+														<f:ajax event="blur" render="tempMsg" />
+													</h:inputText>
+													<h:message id="tempMsg" for="temperature-i"
+														styleClass="validation-tooltip" />
+											</div>
+											
+										<div class="form-group col-6">
+											<label> #{translate['warehouse.state']}:
+											</label>
+											<h:selectOneMenu value="#{bodega.bodega.boEstado}"
+												required="true"
+												requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.state'])}"
+												styleClass="custom-select" id="estado-i">
+												<f:selectItem itemLabel="#{translate['form.select']}"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItem itemValue="${true}" itemLabel="#{translate['state.enabled']}"
+													></f:selectItem>
+												<f:selectItem itemValue="${false}" itemLabel="#{translate['state.disabled']}"
+													></f:selectItem>
+												<f:ajax event="change" render="estadoMsg" />
+											</h:selectOneMenu>
+											<br />
+											<h:message id="estadoMsg" for="estado-i"
+												styleClass="validation-tooltip" />
+										</div>
+										</div>
+										
+									</div>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">#{translate['form.cancel']}</button>
+										<h:commandButton value="#{translate['form.submit']}" id="submit-button"
+											action="#{bodega.registrar()}" styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+
+
+			<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<h:form id="editForm">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">
+									#{translate['form.edit']} #{translate['warehouse']} de <i><h:outputLabel
+											value="#{bodega.objetoObtenido.boNombre}" /></i>
+								</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>Id:</label>
+												<h:inputText disabled="true" value="#{bodega.objetoObtenido.boId}"
+													styleClass="form-control" />
+											</div>
+											
+											<div class="form-group col-6">
+												<label>#{translate['warehouse.name']}:</label>
+												<h:inputText value="#{bodega.objetoObtenido.boNombre}" id="hum-i" required="true"
+												requiredMessage="#{of:format1(translate['validation.required'], translate['warehouse.name'])}"
+													styleClass="form-control">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="100" message="#{of:format2(translate['validation.betweenchar'], 3, 100)}" />
+													<f:ajax event="keyup" render="humMsg" />
+													<f:ajax event="blur" render="humMsg" />
+												</h:inputText>
+												<h:message id="humMsg" for="hum-i"
+														styleClass="validation-tooltip" />
+											</div>
+
+											<div class="form-group col-6">
+												<label>#{translate['warehouse.address']}:</label>
+												<h:inputText value="#{bodega.objetoObtenido.boDireccion}" id="address-i" required="true"
+												requiredMessage="#{of:format1(translate['validation.required'], translate['warehouse.address'])}"
+													styleClass="form-control">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="90" message="#{of:format2(translate['validation.betweenchar'], 5, 90)}" />
+													<f:ajax event="keyup" render="addressMsg" />
+													<f:ajax event="blur" render="addressMsg" />
+												</h:inputText>
+												<h:message id="addressMsg" for="address-i"
+														styleClass="validation-tooltip" />
+											</div>
+
+
+											<div class="form-group col-6">
+													<label>#{translate['warehouse.phone']}:</label>
+													<h:inputText value="#{bodega.objetoObtenido.boTelefono}"
+														required="true"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['warehouse.phone'])}"
+														styleClass="form-control" id="temperature-i"
+														converterMessage="#{translate['validation.onlyNums']}">
+														<o:validator validatorId="javax.faces.LongRange"
+															minimum="1000000" maximum="4000000000"
+															message="#{of:format2(translate['validation.betweennum'], 0, 4000000000)}" />
+														<f:ajax event="keyup" render="tempMsg" />
+														<f:ajax event="blur" render="tempMsg" />
+													</h:inputText>
+													<h:message id="tempMsg" for="temperature-i"
+														styleClass="validation-tooltip" />
+											</div>
+										
+										<div class="form-group col-6">
+											<label> #{translate['warehouse.state']}:
+											</label>
+											<h:selectOneMenu value="#{bodega.objetoObtenido.boEstado}"
+												required="true"
+												requiredMessage="#{of:format1(translate['validation.selection'], translate['rack.state'])}"
+												styleClass="custom-select" id="estado-i">
+												<f:selectItem itemLabel="#{translate['form.select']}"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItem itemValue="${true}" itemLabel="#{translate['state.enabled']}"
+													></f:selectItem>
+												<f:selectItem itemValue="${false}" itemLabel="#{translate['state.disabled']}"
+													></f:selectItem>
+												<f:ajax event="change" render="estadoMsg" />
+											</h:selectOneMenu>
+											<br />
+											<h:message id="estadoMsg" for="estado-i"
+												styleClass="validation-tooltip" />
+										</div>
+										</div>
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">#{translate['form.cancel']}</button>
+								<h:commandButton action="#{bodega.actualizar()}" value="#{translate['form.update']}"
+									styleClass="btn btn-success" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">
+								<h:outputText value="#{translate['form.warning']}" />
+							</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- PopUp body -->
+						<div class="modal-body">
+							<p>
+								<span style="margin: 0 10px 0 0;"><img width="48"
+									src="../resources/images/SI/warning.png" /> </span> 
+									#{of:format2(translate['form.confirmdelete'], translate['warehouse'], bodega.objetoObtenido.boNombre)}
+							</p>
+						</div>
+						<!-- PopUp footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">#{translate['form.cancel']}</button>
+							<h:form id="deleteForm">
+								<h:commandLink actionListener="#{bodega.eliminar()}"
+									styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+							</h:form>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

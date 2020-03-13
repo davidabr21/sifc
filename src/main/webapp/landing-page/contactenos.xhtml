@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<ui:composition
+		template="../resources/templates/landingPageTemplate.xhtml">
+		<ui:define name="mainContain">
+			<div class="principal">
+				<div class="principal-banner-container">
+					<div class="img-form-container">
+						<div>
+							<div
+								style="display: flex; background-size: 60% 100%; width: 100%; background: url('resources/images/contact.jpg');">
+
+								<div class="empty-half">.</div>
+								<div class="form-container">
+									<form class="contact-form">
+										<div class="form-first-half">
+											<label>Nombre</label> <br />
+											<input type="text" class="common-input" name="" /><br />
+											<label>Apellido</label> <br />
+											<input type="text" class="common-input" name="" /><br />
+										</div>
+										<div class="form-second-half">
+											<label>Correo</label> <br />
+											<input type="text" class="common-input" name="" /><br />
+											<label>TelÃ©fono</label> <br />
+											<input type="text" class="common-input" name="" /><br />
+										</div>
+
+										<label>Mensaje</label> <br />
+										<input type="text" class="textarea-form" name="" /><br />
+										<div class="form-footer">
+											<input type="submit" class="submit-button" value="Enviar"
+												name="" />
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

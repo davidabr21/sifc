@@ -1,0 +1,630 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<f:metadata>
+        	<f:event type="preRenderView" listener="#{pedido.obtenerUsuario(request.getSession(false).getAttribute('id'))}"/>
+        	<f:event type="preRenderView" listener="#{pedido.setClienteId(request.getSession(false).getAttribute('id'))}"/>
+      	</f:metadata>
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.orders']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/gridpages.css" />
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/dashboard.css" />
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/bootstrap.min.css" />
+				<script src="../resources/js/jquery.min.js"></script>
+				<script src="../resources/js/bootstrap.min.js"></script>
+
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/c3.min.css" />
+				<style>
+				.column4, .column5 {
+					width: 30px;
+				}
+				</style>
+			<div class="img-header" style="background: url(#{resource['images/admin.jpg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+				
+			</div>
+			<div class="main-container">
+				<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Cliente'}">
+				<div class="grid-container" style="width: 90%; background-color: #fff">
+					<nav aria-label="breadcrumb">
+						  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+						  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.orders']}</li>
+						  </ol>
+					</nav>
+					<script>
+						let precios = [];
+					</script>
+					
+					<h:form>
+					<div>
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+					  <li class="nav-item">
+					    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">#{translate['order.finish']}</a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">#{translate['order.active']}</a>
+					  </li>
+					</ul>
+					<div class="tab-content" id="myTabContent">
+					  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+						<ui:repeat var="p" value="#{pedido.obtenerEnSeleccion()}">
+							<div class="col-12">
+								<h:dataTable value="#{p.productosporpedidos}" var="pp" class="table">
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['user.img']}" />
+									</f:facet>
+									<o:graphicImage rendered ="#{not empty pp.producto.imagenporproductos}" value="#{pp.producto.imagenporproductos.toArray()[0].ipImagen}" dataURI="true"
+									style="width: 128px" class="card-img-top"/>
+									<h:graphicImage rendered="#{empty pp.producto.imagenporproductos}" library="images" style="width: 128px" class="card-img-top" name="noprimg.png" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.proNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.tipoproducto.tpNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.quantity']}" />
+									</f:facet>
+									#{pp.prpCantidad}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.price']}" />
+									</f:facet>
+									<script>
+						    		var precio = #{pp.producto.proPrecio};
+						    		var total = new Intl.NumberFormat('es-ES').format(precio);
+						    		document.write("$" + total);
+						    		
+						    	</script>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="Total"/>
+									</f:facet>
+									<script>
+									 	var unidad = #{pp.producto.proPrecio};
+									 	var cantidad = #{pp.prpCantidad};
+									 	var total = unidad * cantidad;
+									 	precios.push(total);
+									 	total = new Intl.NumberFormat('es-ES').format(total);
+									 	document.write("$" + total);
+									 	
+									</script>
+									
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+									</f:facet>
+
+									<h:commandLink value="" actionListener="#{pedido.leerProducto(pp)}"
+										styleClass="modifyBtn">
+										<f:passThroughAttribute name="data-toggle" value="modal" />
+										<f:passThroughAttribute name="href" value="#modalDelete" />
+										<f:ajax render="deleteForm" />
+										<img width="24" src="../resources/images/SI/Grid/remove.png" />
+									</h:commandLink>
+								</h:column>
+								</h:dataTable>
+								<hr/>
+								<div style="text-align: right">
+								<h4>
+								<b>Total: </b>
+								<script>
+									var precioTotal = 0;
+									precios.forEach(p => precioTotal += p);
+									precioTotal = new Intl.NumberFormat('es-ES').format(precioTotal);
+									document.write("$" + precioTotal);
+								</script>
+								</h4>
+								</div>
+							</div>
+							<div style="text-align: center; padding: 0 20px 20px 20px">
+
+							<h:commandLink value="#{translate['form.send']} #{translate['order']}" 
+							actionListener="#{pedido.actualizarPorEstados('Solicitado', p)}" styleClass="btn btn-success"></h:commandLink>
+							</div>
+						</ui:repeat>
+						</div>
+						  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+						  		<ui:repeat var="p" value="#{pedido.obtenerPorCliente()}">
+						  	<div style="padding: 30px">
+						  	
+						  		<h2>Pedido #{p.usuarioByPedClienteCliId.usId}0#{p.pedId}</h2>
+						  		<h4>Pedido iniciado el: #{p.pedFechaInicial}</h4><h5>#{translate['provider.state']}: #{p.pedEstado}
+						  		<i style="font-size: 14px"><ui:fragment rendered="#{p.pedEstado == 'En Seleccion'}">-Aún no has finalizado el pedido-</ui:fragment></i>
+						  		</h5>
+						  		<a class="btn btn-primary" data-toggle="collapse" href="#collapse#{p.pedId}" role="button" aria-expanded="false" aria-controls="collapse#{p.pedId}">
+								    Ver Detalles
+								  </a>
+					  		</div>
+							  <div class="col">
+							    <div class="collapse" id="collapse#{p.pedId}">
+							      <div class="card card-body">
+							      
+							<div class="col-12">
+								<h:dataTable value="#{p.productosporpedidos}" var="pp" class="table">
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['user.img']}" />
+									</f:facet>
+									<o:graphicImage rendered ="#{not empty pp.producto.imagenporproductos}" value="#{pp.producto.imagenporproductos.toArray()[0].ipImagen}" dataURI="true"
+									style="width: 128px" class="card-img-top"/>
+									<h:graphicImage rendered="#{empty pp.producto.imagenporproductos}" library="images" class="card-img-top" name="noprimg.png" style="width: 128px"/>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.proNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.tipoproducto.tpNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.quantity']}" />
+									</f:facet>
+									#{pp.prpCantidad}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.price']}" />
+									</f:facet>
+									<script>
+						    		var precio = #{pp.producto.proPrecio};
+						    		var total = new Intl.NumberFormat('es-ES').format(precio);
+						    		document.write("$" + total);
+						    		
+						    	</script>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="Total"/>
+									</f:facet>
+									<script>
+									 	var unidad = #{pp.producto.proPrecio};
+									 	var cantidad = #{pp.prpCantidad};
+									 	var total = unidad * cantidad;
+									 	precios.push(total);
+									 	total = new Intl.NumberFormat('es-ES').format(total);
+									 	document.write("$" + total);
+									 	
+									</script>
+									
+								</h:column>
+								</h:dataTable>
+								</div>
+								</div>
+							    </div>
+							  </div>
+								</ui:repeat>
+						  </div>
+						</div>						
+					</div>
+					
+					<hr/>
+
+					
+					</h:form>
+				</div>
+				<div>
+					*El pedido está sujeto a revisión por parte de un Administrador. El pago se realiza a contraentrega una vez el pedido haya llegado a la dirección indicada en el perfil del solicitante.
+				</div>			
+			<div class="modal fade" id="modalDelete">
+					<div class="modal-dialog">
+						<div class="modal-content">
+
+							<!-- PopUp Header -->
+							<div class="modal-header">
+								<h4 class="modal-title">
+									<h:outputText value="#{translate['form.warning']}" />
+								</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<!-- PopUp body -->
+							<h:form id="deleteForm">
+								<div class="modal-body">
+									<p>
+										<span style="margin: 0 10px 0 0;"><img width="48"
+											src="../resources/images/SI/warning.png" /> </span>
+										<h:outputText
+											value="#{of:format2(translate['form.confirmdeleteorder'], translate['product'], pedido.productoObtenido.producto.proNombre)}" />
+									</p>
+								</div>
+								<!-- PopUp footer -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger"
+										data-dismiss="modal">
+										<h:outputText value="#{translate['form.cancel']}" />
+									</button>
+									<h:commandLink actionListener="#{pedido.eliminarProducto()}"
+										styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</ui:fragment>
+			<ui:fragment
+				rendered="#{request.getSession(false).getAttribute('rol') != 'Cliente'}">
+					<div class="grid-container" style="width: 90%; background-color: #fff">
+					<nav aria-label="breadcrumb">
+						  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+						  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.orders']}</li>
+						  </ol>
+					</nav>
+										<ul class="nav nav-tabs" id="myTab" role="tablist">
+					  <li class="nav-item">
+					    <a class="nav-link active" id="todos-tab" data-toggle="tab" href="#todos" role="tab" aria-controls="todos" aria-selected="true">Todos</a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" id="terminados-tab" data-toggle="tab" href="#terminados" role="tab" aria-controls="terminados" aria-selected="false">Terminados</a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" id="cancelados-tab" data-toggle="tab" href="#cancelados" role="tab" aria-controls="cancelados" aria-selected="false">Cancelados</a>
+					  </li>
+					</ul>
+					<div class="tab-content" id="myTabContent">
+					  <div class="tab-pane fade show active" id="todos" role="tabpanel" aria-labelledby="todos-tab">
+						<h:form>
+								<script>
+									let precios = [];
+								</script>
+						  		<ui:repeat var="p" value="#{pedido.obtenerLista()}">
+						  	<div style="padding: 30px">
+						  		<div class="row">
+						  		<div class="col-8">
+						  		<h2>Pedido #{p.usuarioByPedClienteCliId.usId}0#{p.pedId} por #{p.usuarioByPedClienteCliId.usNombreDeUsuario}</h2>
+						  		<h4>Pedido iniciado el: #{p.pedFechaInicial}</h4><h5>#{translate['provider.state']}: #{p.pedEstado}
+						  		
+						  		</h5>
+						  		<a class="btn btn-primary" data-toggle="collapse" href="#collapse#{p.pedId}" role="button" aria-expanded="false" aria-controls="collapse#{p.pedId}">
+								    Ver Detalles
+								  </a>
+							  </div>
+							  <ui:fragment rendered="#{p.pedEstado == 'Solicitado'}">
+							  <div class="col-4" style="text-align: right">
+
+								<h:commandLink value="Aceptar" action="#{pedido.actualizarPorEstados('Autorizado', p)}" styleClass="btn btn-success">
+								</h:commandLink>
+								<br />
+								<hr />
+								<h:commandLink value="Rechazar" action="#{pedido.actualizarPorEstados('Cancelado', p)}" styleClass="btn btn-danger">
+								</h:commandLink>
+							  </div>
+							  </ui:fragment>
+							  <ui:fragment rendered="#{p.pedEstado != 'En Seleccion' and p.pedEstado != 'Solicitado' and p.pedEstado !='Terminado' and p.pedEstado != 'Cancelado'}">
+							  <div class="col-4" style="text-align: right">
+							  	<br/>
+							  	<h4>Actualizar Estado</h4>
+							  	<h:selectOneMenu value="#{pedido.estado}"
+									required="true"
+									requiredMessage="#{of:format1(translate['validation.selection'], translate['provider.state'])}"
+									styleClass="custom-select" id="estado-i">
+									<f:selectItem itemLabel="#{translate['form.select']}"
+										itemValue="#{null}" noSelectionOption="true" />
+									<f:selectItem itemValue="En Fabricacion" itemLabel="En Fabricacion"></f:selectItem>
+									<f:selectItem itemValue="En Embalaje" itemLabel="En Embalaje"></f:selectItem>
+									<f:selectItem itemValue="Embalado" itemLabel="Embalado"></f:selectItem>
+									<f:selectItem itemValue="Despachado" itemLabel="Despachado"></f:selectItem>
+									<f:selectItem itemValue="Terminado" itemLabel="Terminado"></f:selectItem>
+									<f:selectItem itemValue="Cancelar" itemLabel="Cancelado"></f:selectItem>
+									<f:ajax event="change" render="estadoMsg" />
+							</h:selectOneMenu>
+							  	<br/>
+							  	<hr/>
+								<h:commandLink value="Aceptar" action="#{pedido.actualizarPorEstados(p)}" styleClass="btn btn-success">
+								</h:commandLink>
+							  </div>
+							  </ui:fragment>
+							  </div>
+							  
+					  		</div>
+							  <div class="col">
+							    <div class="collapse" id="collapse#{p.pedId}">
+							      <div class="card card-body">
+							      
+							<div class="col-12">
+								<h:dataTable value="#{p.productosporpedidos}" var="pp" class="table">
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['user.img']}" />
+									</f:facet>
+									<o:graphicImage rendered ="#{not empty pp.producto.imagenporproductos}" value="#{pp.producto.imagenporproductos.toArray()[0].ipImagen}" dataURI="true"
+									style="width: 128px" class="card-img-top"/>
+									<h:graphicImage rendered="#{empty pp.producto.imagenporproductos}" style="width: 128px" library="images" class="card-img-top" name="noprimg.png" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.proNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.tipoproducto.tpNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.quantity']}" />
+									</f:facet>
+									#{pp.prpCantidad}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.price']}" />
+									</f:facet>
+									<script>
+						    		var precio = #{pp.producto.proPrecio};
+						    		var total = new Intl.NumberFormat('es-ES').format(precio);
+						    		document.write("$" + total);
+						    		
+						    	</script>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="Total"/>
+									</f:facet>
+									<script>
+									 	var unidad = #{pp.producto.proPrecio};
+									 	var cantidad = #{pp.prpCantidad};
+									 	var total = unidad * cantidad;
+									 	precios.push(total);
+									 	total = new Intl.NumberFormat('es-ES').format(total);
+									 	document.write("$" + total);
+									 	
+									</script>
+									
+								</h:column>
+								</h:dataTable>
+								
+								</div>
+								</div>
+							    </div>
+							  </div>
+							  <hr />
+								</ui:repeat>
+								</h:form>
+								</div>
+								
+								
+						<!-- LISTA TERMINADOS -->
+								
+								
+						<div class="tab-pane fade show" id="terminados" role="tabpanel" aria-labelledby="terminados-tab">
+								
+								
+								<h:form id="pedidos-form">
+								<script>
+									let precios = [];
+								</script>
+					  		<ui:repeat var="p" value="#{pedido.obtenerPorEstado('Terminado')}">
+						  	<div style="padding: 30px">
+						  		<div class="row">
+						  		<div class="col-8">
+						  		<h2>Pedido #{p.usuarioByPedClienteCliId.usId}0#{p.pedId} por #{p.usuarioByPedClienteCliId.usNombreDeUsuario}</h2>
+						  		<h4>Pedido iniciado el: #{p.pedFechaInicial}</h4><h5>#{translate['provider.state']}: #{p.pedEstado}
+						  		
+						  		</h5>
+						  		<h4>Pedido finalizado el: #{p.pedFechaConclusion} - Finalizado por: #{p.usuarioByPedAutorizador.usNombreDeUsuario}</h4>
+						  		<a class="btn btn-primary" data-toggle="collapse" href="#collapse#{p.pedId}" role="button" aria-expanded="false" aria-controls="collapse#{p.pedId}">
+								    Ver Detalles
+								  </a>
+							  </div>
+							  </div>
+							  
+					  		</div>
+							  <div class="col">
+							    <div class="collapse" id="collapse#{p.pedId}">
+							      <div class="card card-body">
+							      
+							<div class="col-12">
+								<h:dataTable value="#{p.productosporpedidos}" var="pp" class="table">
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['user.img']}" />
+									</f:facet>
+									<o:graphicImage rendered ="#{not empty pp.producto.imagenporproductos}" value="#{pp.producto.imagenporproductos.toArray()[0].ipImagen}" dataURI="true"
+									style="width: 128px" class="card-img-top"/>
+									<h:graphicImage rendered="#{empty pp.producto.imagenporproductos}" style="width: 128px" library="images" class="card-img-top" name="noprimg.png" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.proNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.tipoproducto.tpNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.quantity']}" />
+									</f:facet>
+									#{pp.prpCantidad}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.price']}" />
+									</f:facet>
+									<script>
+						    		var precio = #{pp.producto.proPrecio};
+						    		var total = new Intl.NumberFormat('es-ES').format(precio);
+						    		document.write("$" + total);
+						    		
+						    	</script>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="Total"/>
+									</f:facet>
+									<script>
+									 	var unidad = #{pp.producto.proPrecio};
+									 	var cantidad = #{pp.prpCantidad};
+									 	var total = unidad * cantidad;
+									 	precios.push(total);
+									 	total = new Intl.NumberFormat('es-ES').format(total);
+									 	document.write("$" + total);
+									 	
+									</script>
+									
+								</h:column>
+								</h:dataTable>
+								
+								</div>
+								</div>
+							    </div>
+							  </div>
+							  <hr />
+								</ui:repeat>
+								</h:form>
+								
+								
+								</div>
+								
+							
+							<!-- LISTA CANCELADOS -->
+								
+								
+						<div class="tab-pane fade show" id="cancelados" role="tabpanel" aria-labelledby="cancelados-tab">
+								
+								
+								<h:form>
+								<script>
+									let precios = [];
+								</script>
+					  		<ui:repeat var="p" value="#{pedido.obtenerPorEstado('Cancelado')}">
+						  	<div style="padding: 30px">
+						  		<div class="row">
+						  		<div class="col-8">
+						  		<h2>Pedido #{p.usuarioByPedClienteCliId.usId}0#{p.pedId} por #{p.usuarioByPedClienteCliId.usNombreDeUsuario}</h2>
+						  		<h4>Pedido iniciado el: #{p.pedFechaInicial}</h4><h5>#{translate['provider.state']}: #{p.pedEstado}
+						  		<h4>Pedido Cancelado el: #{p.pedFechaConclusion} - Cancelado por: #{p.usuarioByPedAutorizador.usNombreDeUsuario}</h4>
+						  		</h5>
+						  		<a class="btn btn-primary" data-toggle="collapse" href="#collapse#{p.pedId}" role="button" aria-expanded="false" aria-controls="collapse#{p.pedId}">
+								    Ver Detalles
+								  </a>
+							  </div>
+							  </div>
+							  
+					  		</div>
+							  <div class="col">
+							    <div class="collapse" id="collapse#{p.pedId}">
+							      <div class="card card-body">
+							      
+							<div class="col-12">
+								<h:dataTable value="#{p.productosporpedidos}" var="pp" class="table">
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['user.img']}" />
+									</f:facet>
+									<o:graphicImage rendered ="#{not empty pp.producto.imagenporproductos}" value="#{pp.producto.imagenporproductos.toArray()[0].ipImagen}" dataURI="true"
+									style="width: 128px" class="card-img-top"/>
+									<h:graphicImage rendered="#{empty pp.producto.imagenporproductos}" style="width: 128px" library="images" class="card-img-top" name="noprimg.png" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.proNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.name']}" />
+									</f:facet>
+									#{pp.producto.tipoproducto.tpNombre}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.quantity']}" />
+									</f:facet>
+									#{pp.prpCantidad}
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['product.price']}" />
+									</f:facet>
+									<script>
+						    		var precio = #{pp.producto.proPrecio};
+						    		var total = new Intl.NumberFormat('es-ES').format(precio);
+						    		document.write("$" + total);
+						    		
+						    	</script>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="Total"/>
+									</f:facet>
+									<script>
+									 	var unidad = #{pp.producto.proPrecio};
+									 	var cantidad = #{pp.prpCantidad};
+									 	var total = unidad * cantidad;
+									 	precios.push(total);
+									 	total = new Intl.NumberFormat('es-ES').format(total);
+									 	document.write("$" + total);
+									 	
+									</script>
+									
+								</h:column>
+								</h:dataTable>
+								
+								</div>
+								</div>
+							    </div>
+							  </div>
+							  <hr />
+								</ui:repeat>
+								</h:form>
+							</div>
+							
+								</div>
+								</div>
+			</ui:fragment>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

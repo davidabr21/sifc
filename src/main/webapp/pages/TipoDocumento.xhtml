@@ -1,0 +1,296 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.doctype']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<ui:fragment
+				rendered="#{request.getSession(false).getAttribute('rol') == 'Administrador'}">
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/gridpages.css" />
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/dashboard.css" />
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/bootstrap.min.css" />
+				<script src="../resources/js/jquery.min.js"></script>
+				<script src="../resources/js/bootstrap.min.js"></script>
+
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css"
+					href="../resources/css/c3.min.css" />
+				<style>
+				.column4, .column5 {
+					width: 30px;
+				}
+				</style>
+
+			<div class="img-header" style="background: url(#{resource['images/admin.jpg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+				
+			</div>
+			<div class="main-container">
+				<div class="grid-container" style="width: 90%;">
+				<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+					  <li class="breadcrumb-item"><a href="#">#{translate['menu.user']}</a></li>
+					  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.doctype']}</li>
+					  </ol>
+				</nav>
+						<h:form id="mainForm">
+
+							<nav class="top-grid-bar">
+
+							<div class="action-bar">
+								<a data-toggle="modal" data-target="#ModalAgregar"
+									href="#exampleModal"><img width="24"
+									src="../resources/images/SI/Grid/add.png" /></a>
+							</div>
+
+							</nav>
+
+							<h:dataTable value="#{tipodoc.obtenerLista()}" var="obj"
+								styleClass="main-grid table table-striped table-sm"
+								id="main-grid">
+
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="Id" />
+									</f:facet>
+									<h:outputLabel value="#{obj.tdId}" style="margin-bottom: 0;" />
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">
+										<h:outputLabel value="#{translate['rol.name']}" />
+									</f:facet>
+									<h:outputLabel value="#{obj.tdNombre}"
+										style="margin-bottom: 0;" />
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">
+									</f:facet>
+
+									<h:commandLink value="" actionListener="#{tipodoc.leer(obj)}"
+										styleClass="modifyBtn">
+										<f:passThroughAttribute name="data-toggle" value="modal" />
+										<f:passThroughAttribute name="href" value="#modalDelete" />
+										<f:ajax render="deleteForm" />
+										<img width="24" src="../resources/images/SI/Grid/remove.png" />
+									</h:commandLink>
+								</h:column>
+
+								<h:column>
+									<f:facet name="header">
+									</f:facet>
+
+									<h:commandLink value="" actionListener="#{tipodoc.leer(obj)}"
+										styleClass="modifyBtn">
+										<f:passThroughAttribute name="data-toggle" value="modal" />
+										<f:passThroughAttribute name="href" value="#EditModal" />
+										<f:ajax render="editForm" />
+										<img width="24" src="../resources/images/SI/Grid/edit.png" />
+									</h:commandLink>
+								</h:column>
+
+							</h:dataTable>
+
+							<!-- POP UP PARA CREACIÓN/EDICIÓN -->
+							<!-- El PopUp -->
+							<div class="modal fade" id="ModalAgregar" tabindex="-1"
+								role="dialog" aria-labelledby="exampleModalLabel"
+								aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+
+										<!-- PopUp Header -->
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">
+												<h:outputText
+													value="#{translate['form.add']} #{translate['rol']}" />
+											</h5>
+											<button type="button" class="close" data-dismiss="modal"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<!-- PopUp body -->
+										<div class="modal-body">
+
+											<div class="form-row">
+
+												<div class="form-group col-6">
+													<label>Id:</label>
+													<h:inputText disabled="true"
+														value="#{tipodoc.tipodocumento.tdNombre}"
+														styleClass="form-control" />
+												</div>
+
+												<div class="form-group col-6">
+													<h:outputLabel for="email" value="#{translate['rol.name']}" />
+													<h:inputText id="nombre-i"
+														value="#{tipodoc.tipodocumento.tdNombre}"
+														requiredMessage="#{of:format1(translate['validation.required'], translate['rol.name'])}"
+														styleClass="form-control" required="true">
+
+														<o:validator validatorId="javax.faces.Length" minimum="2"
+															maximum="50"
+															message="#{of:format2(translate['validation.betweenchar'], 2, 50)}" />
+														<o:validator validatorId="javax.faces.RegularExpression"
+															pattern="^[a-zA-Z]+$"
+															message="#{translate['validation.onlyLetters']}" />
+														<f:ajax event="keyup" render="nombreMsg" />
+													</h:inputText>
+													<h:message id="nombreMsg" for="nombre-i"
+														styleClass="validation-tooltip">
+
+													</h:message>
+												</div>
+											</div>
+										</div>
+										<!-- PopUp footer -->
+										<div class="modal-footer">
+											<button type="button" class="btn btn-danger"
+												data-dismiss="modal">
+												<h:outputText value="#{translate['form.cancel']}" />
+											</button>
+											<h:commandButton value="#{translate['form.submit']}"
+												id="submit-button" action="#{tipodoc.registrar()}"
+												styleClass="btn btn-success">
+											</h:commandButton>
+										</div>
+									</div>
+								</div>
+							</div>
+						</h:form>
+					</div>
+				</div>
+
+
+				<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+
+							<!-- PopUp Header -->
+							<h:form id="editForm">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">
+										<h:outputText
+											value="#{translate['form.edit']} #{translate['rol']}: " />
+										<i><h:outputText
+												value="#{tipodoc.tipodocObtenido.tdNombre}" /></i>
+									</h5>
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+
+								<div class="modal-body">
+									<div class="form-row">
+
+										<div class="form-group col-6">
+											<label>Id:</label>
+											<h:inputText disabled="true"
+												value="#{tipodoc.tipodocObtenido.tdNombre}"
+												styleClass="form-control" />
+										</div>
+
+										<div class="form-group col-6">
+											<h:outputLabel for="email" value="#{translate['rol.name']}" />
+											<h:inputText id="nombre-i"
+												value="#{tipodoc.tipodocObtenido.tdNombre}"
+												requiredMessage="#{of:format1(translate['validation.required'], translate['rol.name'])}"
+												styleClass="form-control" required="true">
+
+												<o:validator validatorId="javax.faces.Length" minimum="2"
+													maximum="50"
+													message="#{of:format2(translate['validation.betweenchar'], 2, 50)}" />
+												<o:validator validatorId="javax.faces.RegularExpression"
+													pattern="^[a-zA-Z]+$"
+													message="#{translate['validation.onlyLetters']}" />
+												<f:ajax event="keyup" render="nombreMsg" />
+											</h:inputText>
+											<h:message id="nombreMsg" for="nombre-i"
+												styleClass="validation-tooltip">
+
+											</h:message>
+										</div>
+									</div>
+								</div>
+								<!-- PopUp footer -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger"
+										data-dismiss="modal">
+										<h:outputText value="#{translate['form.cancel']}" />
+									</button>
+									<h:commandButton action="#{tipodoc.actualizar()}"
+										value="#{translate['form.update']}"
+										styleClass="btn btn-success" />
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+
+
+
+
+				<div class="modal fade" id="modalDelete">
+					<div class="modal-dialog">
+						<div class="modal-content">
+
+							<!-- PopUp Header -->
+							<div class="modal-header">
+								<h4 class="modal-title">
+									<h:outputText value="#{translate['form.warning']}" />
+								</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<!-- PopUp body -->
+							<h:form id="deleteForm">
+								<div class="modal-body">
+									<p>
+										<span style="margin: 0 10px 0 0;"><img width="48"
+											src="../resources/images/SI/warning.png" /> </span>
+										<h:outputText
+											value="#{of:format2(translate['form.confirmdelete'], translate['menu.doctype'], tipodoc.tipodocObtenido.tdNombre)}" />
+									</p>
+								</div>
+								<!-- PopUp footer -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger"
+										data-dismiss="modal">
+										<h:outputText value="#{translate['form.cancel']}" />
+									</button>
+									<h:commandLink actionListener="#{tipodoc.eliminar()}"
+										styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</ui:fragment>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

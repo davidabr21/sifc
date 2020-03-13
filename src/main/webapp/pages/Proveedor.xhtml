@@ -1,0 +1,529 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<h:outputText value="SIFC - #{translate['menu.supplier']}" />
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.supplier']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css" href="../resources/css/jquery.dataTables.min.css"/>
+			<script src="../resources/js/jquery.dataTables.min.js"></script>
+			<h:outputScript library="js" name="gridprov.js"
+					target="body" />
+			<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>	
+			<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+			<script type="text/javascript" src="../resources/js/xlsx.full.min.js"></script>
+			<style>
+			.cmn8, .cmn9{
+				width: 30px;
+			}
+			</style>
+				<div class="img-header" style="background: url(#{resource['images/stock.jpeg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+					
+				</div>
+				<div class="main-container">
+				<div class="row" style="margin:0;">
+				<div id="grid-containerp" class="grid-container" style="width: 80%; border: 0;">
+					<nav aria-label="breadcrumb">
+						  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+						  <li class="breadcrumb-item">#{translate['menu.stocking']}</li>
+						  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.supplier']}</li>
+						  </ol>
+					</nav>
+					<h:form id="mainForm">
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+							<a	href="#" class="emailDisplay"><img width="24"
+								src="../resources/images/SI/Grid/email.png" /></a>
+							<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Administrador'}">
+							<a data-toggle="modal" data-target="#ModalAgregar"
+								href="#exampleModal"><img width="24"
+								src="../resources/images/SI/Grid/add.png" /></a>
+							</ui:fragment>
+						</div>
+
+						</nav>
+
+						<h:dataTable value="#{proveedor.obtenerLista()}" var="obj"
+							styleClass="main-grid table table-striped table-sm"
+							id="main-grid"
+							columnClasses="cmn1, cmn2, cmn3, cmn4, cmn5, cmn6, cmn7, cmn8, cmn9">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prvId}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['supplier.name']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prvNombre}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['supplier.addres']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prvDireccion}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['supplier.phone']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prvNumeroContacto}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['supplier.mail']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prvCorreo}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['supplier.description']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prvDescripcion}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['supplier.state']}" />
+								</f:facet>
+								<h:outputLabel rendered="#{obj.prvEstado == true}" value=""><span class="full-stock state">&nbsp;</span>Activo </h:outputLabel>
+								<h:outputLabel rendered="#{obj.prvEstado == false}" value=""><span class="low-stock state">&nbsp;</span>Inactivo </h:outputLabel>
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{proveedor.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#readModal" />
+									<f:ajax render="readForm" />
+									<f:ajax render="materia-grid"/>
+									<img width="24" src="../resources/images/SI/Grid/read.png" />
+								</h:commandLink>
+							</h:column>
+							
+							<h:column>
+								<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Administrador'}">
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{proveedor.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#modalDelete" />
+									<f:ajax render="deleteForm" />
+									<img width="24" src="../resources/images/SI/Grid/remove.png" />
+								</h:commandLink>
+								</ui:fragment>
+							</h:column>
+							<h:column>
+								<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Administrador'}">
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{proveedor.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#EditModal" />
+									<f:ajax render="editForm" />
+									<img width="24" src="../resources/images/SI/Grid/edit.png" />
+								</h:commandLink>
+								</ui:fragment>
+							</h:column>
+						</h:dataTable>
+						<div id="pager"></div>
+						<!-- POP UP PARA CREACIÓN/EDICIÓN -->
+						<!-- El PopUp -->
+						<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Registrar
+											Proveedor</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- PopUp body -->
+									<div class="modal-body">
+
+										<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>Id:</label>
+												<h:inputText disabled="true" value="#{proveedor.prvId}"
+													styleClass="form-control" />
+											</div>
+
+											<div class="form-group col-6">
+												<label> #{translate['supplier.name']}: </label>
+												<h:inputText value="#{proveedor.prvNombre}"
+													styleClass="form-control" />
+											</div>
+										</div>
+
+
+										<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>#{translate['supplier.addres']}:</label>
+												<h:inputText value="#{proveedor.prvDireccion}"
+													styleClass="form-control" />
+											</div>
+
+											<div class="form-group col-6">
+												<label>#{translate['supplier.addres']}: </label>
+												<h:inputText value="#{proveedor.prvNumeroContacto}"
+													styleClass="form-control" />
+											</div>
+										</div>
+
+										<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>#{translate['supplier.mail']}:</label>
+												<h:inputText value="#{proveedor.prvCorreo}"
+													styleClass="form-control" />
+											</div>
+
+											<div class="form-group col-6">
+												<label>#{translate['supplier.description']}: </label>
+												<h:inputText value="#{proveedor.prvDescripcion}"
+													styleClass="form-control" />
+											</div>
+										</div>
+
+									</div>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">#{translate['form.cancel']}</button>
+										<h:commandButton value="#{translate['form.submit']}" id="submit-button"
+											action="#{proveedor.registrar()}" styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+				<style>
+					.unmargin{
+						margin: 0;
+					}
+					#grid-containerp{
+						
+						transition: all 0.5s linear;
+					}
+				</style>
+				<script>
+					let isActive = false;
+					$( ".emailDisplay" ).click(function() {
+						
+						if(isActive){
+							$( "#grid-containerp" ).removeClass( "unmargin col-6" );
+							setTimeout(function(){
+									$( "#email-container" ).hide()}, 1);
+							isActive = false;
+						}
+						else{
+							$( "#grid-containerp" ).addClass( "unmargin col-6" );
+							setTimeout(function(){$( "#email-container" ).show( "slow" )}, 400);
+							
+							isActive = true;
+						}
+					});
+
+				</script>
+				<div id="email-container" class="col-6" style="display: none; position: relative; top: -80px;">
+					<h:form id="emailform" style="border: 1px solid #ccc;  padding: 20px 8px 0 8px; background-color: #fff; font-family: 'Poppins', sans-serif;">
+						<h3 style="margin-left: 15px">#{translate['email.sendemail']}</h3>
+						<div class="form-group col-12">
+							<label>#{translate['email.to']}:</label>
+							<div style="display: flex">
+							<div class="col-11" style="padding:0">
+							<h:inputText value="#{email.emails}" id="i-Email"
+								styleClass="form-control emailFrom" />
+							</div>
+							<div class="col-1" style="padding: 0 0 0 5px">
+								<h:commandLink actionListener="#{email.setEmails(proveedor.getCorreos())}"
+								value="T" styleClass="btn btn-primary" style="width:100%;">
+									<f:ajax render="i-Email"></f:ajax>
+								</h:commandLink>
+							</div>
+							</div>
+						</div>
+						
+					
+						<div class="form-group col-12">
+							<label>#{translate['email.subject']}</label>
+							<h:inputText value="#{email.asunto}"
+								styleClass="form-control" />
+						</div>
+						<div class="form-group col-12">
+							<label>#{translate['email.message']}</label>
+							<h:inputTextarea rows="4" value="#{email.mensaje}" styleClass="form-control" style="resize: none;"/>
+						</div>
+						<div class="form-group col-12" style="text-align: right;">
+							<h:commandButton action="#{email.sendEmail()}"
+									value="#{translate['form.send']}" styleClass="btn btn-success" />
+							
+						</div>
+					</h:form>
+				</div>
+				</div>
+			</div>
+
+
+			<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<h:form id="editForm">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">
+										<h:outputText
+											value="#{translate['form.edit']} #{translate['supplier']}: " />
+										<i><h:outputText
+												value="#{proveedor.objetoObtenido.prvNombre}" /></i>
+									</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+
+							<div class="modal-body">
+									<div class="form-row">
+
+										<div class="form-group col-6">
+											<label>Id:</label>
+											<h:inputText disabled="true"
+												value="#{proveedor.objetoObtenido.prvId}"
+												styleClass="form-control" />
+										</div>
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.name']}:</label>
+											<h:inputText value="#{proveedor.objetoObtenido.prvNombre}"
+												styleClass="form-control" id="nombreTxt" />
+										</div>
+									</div>
+									<div class="form-row">
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.addres']}:</label>
+											<h:inputText value="#{proveedor.objetoObtenido.prvDireccion}"
+												styleClass="form-control" />
+										</div>
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.addres']}:</label>
+											<h:inputText
+												value="#{proveedor.objetoObtenido.prvNumeroContacto}"
+												styleClass="form-control" />
+										</div>
+									</div>
+
+									<div class="form-row">
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.mail']}: </label>
+											<h:inputText value="#{proveedor.objetoObtenido.prvCorreo}"
+												styleClass="form-control" />
+										</div>
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.description']}:</label>
+											<h:inputText
+												value="#{proveedor.objetoObtenido.prvDescripcion}"
+												styleClass="form-control" />
+										</div>
+									</div>
+
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">#{translate['form.cancel']}</button>
+								<h:commandButton action="#{proveedor.actualizar()}" value="#{translate['form.update']}"
+									styleClass="btn btn-success" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="modal fade" id="readModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<h:form id="readForm">
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">#{of:format1(translate['form.detail'], proveedor.objetoObtenido.prvNombre)}</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+							<div class="modal-body">
+									<div class="form-row">
+
+										<div class="form-group col-6">
+											<label>Id: </label> <br />
+												<b>  <h:outputLabel value="#{proveedor.objetoObtenido.prvId}"
+											style="margin-bottom: 0;" /> </b>
+										</div>
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.name']}:</label> <br />
+												<b>  <h:outputLabel value="#{proveedor.objetoObtenido.prvNombre}"
+											style="margin-bottom: 0;" /> </b>
+										</div>
+									</div>
+									<div class="form-row">
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.addres']}: </label> <br />
+												<b>  <h:outputLabel value="#{proveedor.objetoObtenido.prvDireccion}"
+											style="margin-bottom: 0;" /> </b>
+										</div>
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.addres']}: </label> <br />
+												<b>  <h:outputLabel value="#{proveedor.objetoObtenido.prvNumeroContacto}"
+											style="margin-bottom: 0;" /> </b>
+										</div>
+									</div>
+
+									<div class="form-row">
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.mail']}:  </label> <br />
+												<b>  <h:outputLabel value="#{proveedor.objetoObtenido.prvCorreo}"
+											style="margin-bottom: 0;" /> </b>
+										</div>
+
+										<div class="form-group col-6">
+											<label>#{translate['supplier.description']}: </label> <br />
+											<b>  <h:outputLabel value="#{proveedor.objetoObtenido.prvDescripcion}"
+											style="margin-bottom: 0;" /> </b>
+										</div>
+										
+									</div>
+									<hr />
+									<div>
+										<h3 style="text-align: center">#{translate['menu.rawmaterial']}</h3>
+										<h:dataTable value="#{proveedor.objetoObtenido.materiaprimas}" var="obj"
+										styleClass="table table-striped table-sm"
+										id="materia-grid">
+											<h:column>
+												<f:facet name="header">
+													<h:outputLabel value="Id" />
+												</f:facet>
+												<h:outputLabel value="#{obj.mpId}" style="margin-bottom: 0;" />
+											</h:column>
+											<h:column>
+												<f:facet name="header">
+													<h:outputLabel value="#{translate['rawmaterial.name']}" />
+												</f:facet>
+												<h:outputLabel value="#{obj.mpNombre}" style="margin-bottom: 0;" />
+											</h:column>
+										</h:dataTable>
+									</div>
+
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">#{translate['form.cancel']}</button>
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h4 class="modal-title"><h:outputText value="#{translate['form.warning']}" /></h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- PopUp body -->
+						<div class="modal-body">
+							<p>
+								<span style="margin: 0 10px 0 0;"><img width="48"
+									src="../resources/images/SI/warning.png" /> </span> 
+								<h:outputText
+											value="#{of:format2(translate['form.confirmdelete'], translate['supplier'], proveedor.objetoObtenido.prvId)}" />
+							</p>
+						</div>
+						<!-- PopUp footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">#{translate['form.cancel']}</button>
+							<h:form id="deleteForm">
+								<h:commandLink actionListener="#{proveedor.eliminar()}"
+									styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+							</h:form>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

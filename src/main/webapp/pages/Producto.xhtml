@@ -1,0 +1,520 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+	<ui:define name="pageTitle"><h:outputText value = "SIFC - #{translate['menu.product']}"/></ui:define>
+		<ui:define name="mainContain">
+			
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/jquery.dataTables.min.css" />
+			<h:outputScript library="js" name="jquery.dataTables.min.js"/> 
+			
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body"/> 
+				<script type="text/javascript" src="../resources/js/xlsx.full.min.js"></script>
+				<script type="text/javascript" src="../resources/js/FileSaver.min.js"></script>
+				<script>
+				let dataexcel;
+				$( document ).ready(function() {
+					/* <![CDATA[ */
+					function s2ab(s) {
+		                var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+		                var view = new Uint8Array(buf);  //create uint8array as viewer
+		                for (var i=0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+		                return buf;    
+					}
+					/* ]]> */
+					$( "#excelGenerator" ).click(function() {
+						//doGET("original.xlsx", handleFileData);
+					    var req = new XMLHttpRequest();
+					    req.open("GET", "original.xlsx", true);
+					    req.responseType = "arraybuffer";
+					
+					    req.onload = function(e) {
+					      var data = new Uint8Array(req.response);
+					      var workbook = XLSX.read(data, {type:"array"});
+					      var nombreHoja = workbook.SheetNames[0];
+					      var hoja = workbook.Sheets[nombreHoja];
+
+					      
+					      hoja["A1"] = {
+				    		  t: 's', 
+							  v: "HdasdsdI",
+							  r: "<t>HdasdsdI</t>",
+							  h: "HdasdsdI",
+							  w: "HdasdsdI"
+						  }
+						  
+						  hoja["!ref"] = "A1:H8"
+						  
+					      var wboutt = XLSX.write(workbook, {bookType:'xlsx',  type: 'binary'});
+					      var blobx = new Blob([s2ab(wboutt)],{type:"application/octet-stream"});
+					      saveAs(blobx, String("productos.xlsx"));
+					    }
+					
+					    req.send();
+					});
+
+					function doGET(path, callback) {
+					    var xhr = new XMLHttpRequest();
+					    xhr.onreadystatechange = function() {
+					        if (xhr.readyState == 4) {
+					            console.log("it worked");
+					            if (xhr.status == 200) {
+						            console.log("boom bitch")
+					                // ***Yes, use `xhr.responseText` here***
+					                callback(xhr.responseText);
+					            } else {
+					                // ***No, tell the callback the call failed***
+					                callback(null);
+					            }
+					        }
+					    };
+					    xhr.open("GET", path);
+					    xhr.send();
+					}
+					
+					function handleFileData(fileData) {
+					    if (!fileData) {
+					        
+					        return;
+					    }
+					    dataexcel = fileData;
+					    console.log(dataexcel + " HOLA PERRIS")
+					}
+					
+				});
+				</script>
+			<style>
+			.column4, .column5 {
+				width: 30px;
+			}
+			</style>
+			<div class="img-header" style="background: url(#{resource['images/lab.jpg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+				
+			</div>
+			<div class="main-container">
+				<div class="grid-container" style="width: 90%;">
+				<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+					  <li class="breadcrumb-item"><a href="#">#{translate['menu.stocking']}</a></li>
+					  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.product']}</li>
+					  </ol>
+				</nav>
+				
+
+					<h:form id="mainForm">
+
+
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+							<a data-toggle="modal" data-target="#ModalAgregar"
+								href="#exampleModal"><h:graphicImage library="images" style="width: 24px" name="SI/Grid/add.png" /></a>
+							<a href="#" id="excelGenerator"><img width="24" 
+								src="../resources/images/SI/Grid/toexcel.png" /></a>
+						</div>
+
+						</nav>
+
+						<h:dataTable value="#{producto.obtenerLista()}" var="obj"
+							styleClass="main-grid table table-striped table-sm" id="main-grid"
+							columnClasses="column1, column2, column3, column4, column5">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								#{obj.proId}
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['product.name']}" />
+								</f:facet>
+								#{obj.proNombre}
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['product.quantity']}" />
+								</f:facet>
+								#{obj.proCantidad}
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['product.content']}" />
+								</f:facet>
+								#{obj.proContenido}
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['product.measure']}" />
+								</f:facet>
+								#{obj.umNombre}
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['product.description']}" />
+								</f:facet>
+								#{obj.proDescripcion}
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['product.price']}" />
+								</f:facet>
+								#{obj.proPrecio}
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['product.type']}" />
+								</f:facet>
+								#{obj.tpNombre}
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{producto.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#modalDelete" />
+									<f:ajax render="deleteForm" />
+									<h:graphicImage library="images" style="width: 24px" name="SI/Grid/remove.png" />
+								</h:commandLink>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{producto.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#EditModal" />
+									<f:ajax render="editForm" />
+									<h:graphicImage library="images" style="width: 24px" name="SI/Grid/edit.png" />
+								</h:commandLink>
+							</h:column>
+
+						</h:dataTable>
+						<div id="pager"></div>
+
+						<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel"><h:outputText value = "#{translate['form.add']} #{translate['product']}"/></h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- PopUp body -->
+									<div class="modal-body">
+
+										<div class="form-row">
+											<div class="form-group col-6">
+												<label><h:outputText value = "Id:"/></label>
+												<h:inputText disabled="true" value="#{producto.proId}"
+													styleClass="form-control" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['product.name']}:"/>
+												</label>
+												<h:inputText value="#{producto.proNombre}" id="name-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.name'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="40" message="#{of:format2(translate['validation.betweenchar'], 5, 40)}" />
+													<f:ajax event="keyup" render="nameMsg" />
+													<f:ajax event="blur" render="nameMsg" />
+												</h:inputText>
+												<h:message id="nameMsg" for="name-i" styleClass="validation-tooltip" />
+												
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.quantity']}:"/>
+												</label>
+												<h:inputText value="#{producto.proCantidad}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.quantity'])}"
+													styleClass="form-control" id="quantity-i" converterMessage="#{translate['validation.onlyNums']}">
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="100000" message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+													<f:ajax event="keyup" render="quantityMsg" />
+													<f:ajax event="blur" render="quantityMsg" />	
+												</h:inputText>
+												<h:message id="quantityMsg" for="quantity-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.price']}:"/>
+												</label>
+												<h:inputText value="#{producto.proPrecio}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.price'])}"
+													styleClass="form-control" id="price-i" converterMessage="#{translate['validation.onlyNums']}">>
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="1000000" message="#{of:format2(translate['validation.betweennum'], 0, 1000000)}" />
+													<f:ajax event="keyup" render="priceMsg" />
+													<f:ajax event="blur" render="priceMsg" />	
+												</h:inputText>
+												<h:message id="priceMsg" for="price-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-12">
+												<label>
+													<h:outputText value = "#{translate['product.description']}:"/>
+												</label>
+												<h:inputText value="#{producto.proDescripcion}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.description'])}"
+													styleClass="form-control" id="description-i">
+													<f:ajax event="keyup" render="descriptionMsg" />
+													<f:ajax event="blur" render="descriptionMsg" />
+												</h:inputText>
+												<h:message id="descriptionMsg" for="description-i" styleClass="validation-tooltip" />
+											</div>
+
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.content']}:"/>
+												</label>
+												<h:inputText value="#{producto.proContenido}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.content'])}"
+													styleClass="form-control" id="content-i" converterMessage="#{translate['validation.onlyNums']}">>>
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="1000000" message="#{of:format2(translate['validation.betweennum'], 0, 1000000)}" />
+													<f:ajax event="keyup" render="contentMsg" />
+													<f:ajax event="blur" render="contentMsg" />
+												</h:inputText>
+												<h:message id="contentMsg" for="content-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.measure']}:"/>
+												</label>
+												<h:selectOneMenu value="#{producto.umId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['menu.measureunit'])}"
+													styleClass="custom-select" id="measureunit-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{unidadMedida.obtenerLista()}"
+														var="u" itemLabel="#{u.umNombre}" itemValue="#{u.umId}" />
+													<f:ajax event="change" render="measureunitMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="measureunitMsg" for="measureunit-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.type']}:"/>
+												</label>
+												<h:selectOneMenu value="#{producto.tpId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['menu.protype'])}"
+													styleClass="custom-select" id="protype-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{tipoProducto.obtenerLista()}"
+														var="u" itemLabel="#{u.tpNombre}" itemValue="#{u.tpId}" />
+													<f:ajax event="change" render="protypeMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="protypeMsg" for="protype-i" styleClass="validation-tooltip" />
+											</div>
+										</div>
+
+									</div>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">
+											<h:outputText value = "#{translate['form.cancel']}"/>
+										</button>
+										<h:commandButton value="#{translate['form.submit']}" id="submit-button"
+											action="#{producto.registrar()}"
+											styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+
+			<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<h:form id="editForm">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">
+									<h:outputText value = "#{translate['form.edit']} #{translate['product']}: "/><i><h:outputText
+											value="#{producto.objetoObtenido.proNombre}" /></i>
+								</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="form-row">
+											<div class="form-group col-6">
+												<label><h:outputText value = "Id:"/></label>
+												<h:inputText disabled="true" value="#{producto.objetoObtenido.proId}"
+													styleClass="form-control" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['product.name']}:"/>
+												</label>
+												<h:inputText value="#{producto.objetoObtenido.proNombre}" id="name-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.name'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="40" message="#{of:format2(translate['validation.betweenchar'], 5, 40)}" />
+													<f:ajax event="keyup" render="nameMsg" />
+													<f:ajax event="blur" render="nameMsg" />
+												</h:inputText>
+												<h:message id="nameMsg" for="name-i" styleClass="validation-tooltip" />
+												
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.quantity']}:"/>
+												</label>
+												<h:inputText value="#{producto.objetoObtenido.proCantidad}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.quantity'])}"
+													styleClass="form-control" id="quantity-i" converterMessage="#{translate['validation.onlyNums']}">
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="100000" message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+													<f:ajax event="keyup" render="quantityMsg" />
+													<f:ajax event="blur" render="quantityMsg" />	
+												</h:inputText>
+												<h:message id="quantityMsg" for="quantity-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.price']}:"/>
+												</label>
+												<h:inputText value="#{producto.objetoObtenido.proPrecio}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.price'])}"
+													styleClass="form-control" id="price-i" converterMessage="#{translate['validation.onlyNums']}">>
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="1000000" message="#{of:format2(translate['validation.betweennum'], 0, 1000000)}" />
+													<f:ajax event="keyup" render="priceMsg" />
+													<f:ajax event="blur" render="priceMsg" />	
+												</h:inputText>
+												<h:message id="priceMsg" for="price-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-12">
+												<label>
+													<h:outputText value = "#{translate['product.description']}:"/>
+												</label>
+												<h:inputText value="#{producto.objetoObtenido.proDescripcion}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.description'])}"
+													styleClass="form-control" id="description-i">
+													<f:ajax event="keyup" render="descriptionMsg" />
+													<f:ajax event="blur" render="descriptionMsg" />
+												</h:inputText>
+												<h:message id="descriptionMsg" for="description-i" styleClass="validation-tooltip" />
+											</div>
+
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.content']}:"/>
+												</label>
+												<h:inputText value="#{producto.objetoObtenido.proContenido}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['product.content'])}"
+													styleClass="form-control" id="content-i" converterMessage="#{translate['validation.onlyNums']}">>>
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="1000000" message="#{of:format2(translate['validation.betweennum'], 0, 1000000)}" />
+													<f:ajax event="keyup" render="contentMsg" />
+													<f:ajax event="blur" render="contentMsg" />
+												</h:inputText>
+												<h:message id="contentMsg" for="content-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.measure']}:"/>
+												</label>
+												<h:selectOneMenu value="#{producto.objetoObtenido.umId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['menu.measureunit'])}"
+													styleClass="custom-select" id="measureunit-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{unidadMedida.obtenerLista()}"
+														var="u" itemLabel="#{u.umNombre}" itemValue="#{u.umId}" />
+													<f:ajax event="change" render="measureunitMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="measureunitMsg" for="measureunit-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['product.type']}:"/>
+												</label>
+												<h:selectOneMenu value="#{producto.objetoObtenido.tpId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['menu.protype'])}"
+													styleClass="custom-select" id="protype-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{tipoProducto.obtenerLista()}"
+														var="u" itemLabel="#{u.tpNombre}" itemValue="#{u.tpId}" />
+													<f:ajax event="change" render="protypeMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="protypeMsg" for="protype-i" styleClass="validation-tooltip" />
+											</div>
+										</div>
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">
+									<h:outputText value = "#{translate['form.cancel']}"/>
+								</button>
+								<h:commandButton action="#{producto.actualizar()}"
+									value="#{translate['form.update']}" styleClass="btn btn-success" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">
+								<h:outputText value = "#{translate['form.warning']}"/>
+							</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- PopUp body -->
+						<h:form id="deleteForm">
+							<div class="modal-body">
+								<p>
+									<span style="margin: 0 10px 0 0;"><img width="48"
+										src="../resources/images/SI/warning.png" /> </span> 
+										<h:outputText value = "#{of:format2(translate['form.confirmdelete'], translate['product'], producto.objetoObtenido.proNombre)}"/>
+								</p>
+							</div>
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">
+									<h:outputText value = "#{translate['form.cancel']}"/>
+									</button>
+
+								<h:commandLink actionListener="#{producto.eliminar()}"
+									styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,396 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<title>Bodega</title>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<f:metadata>
+			<f:viewParam name="id" value="#{producto.objetoObtenido.proId}" />
+        	<f:event type="preRenderView" listener="#{producto.obtenerProdCart()}"/>
+      	</f:metadata>
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC #{translate['menu.cart']} - #{producto.objetoObtenido.proNombre}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="gridCarrito.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+			<style>
+				.hoverContainer{
+					background: rgb(5,5,5,0.2);
+					position: absolute;
+    				width: 100%;
+					display:none;
+					text-align: right;
+					padding: 2px;
+					z-index: 2;
+				}
+				.img-container:hover .hoverContainer{
+					display: block;
+				}
+				.img-pro-options{
+					filter: brightness(0) invert(1);
+				}
+				.carousel {
+				  height: 100%;
+				}
+				.imgcarousel{
+					max-height: 100%;  
+					max-width: 100%; 
+					position: absolute;  
+					top: 0;  
+					bottom: 0;  
+					left: 0;  
+					right: 0;  
+					margin: auto;
+				}
+				.carousel-control-next-icon, .carousel-control-prev-icon{
+					filter: brightness(50%);	
+				}
+				.ximg{
+				    position: absolute;
+				    border: 0;
+				    background: 0;
+				    color: #aaa;
+			    }
+			    .centerimg tbody tr td, .centerimg tbody tr{
+			    	display: flex;
+			    }
+			    .btn-group{
+			    	display: none
+			    }
+			    
+			    @media (min-width: 576px){
+			    #ModalAgregarProspecto .modal-dialog {
+				    max-width: 700px;
+				}
+			    }
+			    .dataTable, .dataTables_scrollHeadInner{
+			    	width: 100% !important;
+			    }
+			    .prospectoBadget{
+			        padding: 2px 16px;
+				    background-color: #fff;
+				    border: 1px solid #aaa;
+				    border-radius: 5px;
+		        	margin-bottom: 10px;
+   					display: inline-block;
+			    }
+			    .plus:hover, .minus:hover{
+			    	cursor: pointer;
+			    }
+			</style>
+			<script>
+			$( document ).ready(function() {
+				$('.carousel-inner .carousel-item:first-child').addClass('active');
+				$('.carousel').carousel('pause');
+			});
+			</script>
+			<div class="img-header" style="background: url(#{resource['images/pharma.jpg']}); background-size: cover; height: 180px; background-position-y: 300px;">
+				
+			</div>
+			<div class="main-container" style="padding: 0 100px; font-family: 'Poppins', sans-serif;">
+
+				<div style="position: relative; top: -80px; border: 1px solid #ccc; border-top-right-radius: .30rem; border-top-left-radius: .30rem;">
+				<nav aria-label="breadcrumb">
+				  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+				    <li class="breadcrumb-item"><a href="Carrito.xhtml">#{translate['menu.cart']}</a></li>
+				    <li class="breadcrumb-item"><a href="#">#{producto.objetoObtenido.tipoproducto.tpNombre}</a></li>
+				    <li class="breadcrumb-item active" aria-current="page">#{producto.objetoObtenido.proNombre}</li>
+				  </ol>
+				</nav>
+				
+				<div class="row" style="border: solid 1px #eee; margin: 0; padding: 10px 0; background-color: #f5f5f5;">
+					<div class="col-4 img-container">
+					<h:form>
+						<div style="position: relative">
+							<div class="hoverContainer">
+								<a data-toggle="modal" data-target="#ModalAgregar"
+								href="#exampleModal"><h:graphicImage width="24" class="img-pro-options"
+								library="images" name="SI/Grid/add.png" /></a>
+							</div>
+							<h:graphicImage rendered="#{empty producto.objetoObtenido.imagenporproductos}" library="images" class="card-img-top" name="noprimg.png" />
+							
+							<ui:fragment rendered="#{not empty producto.objetoObtenido.imagenporproductos}">
+							<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+							  <div class="carousel-inner">
+							  <ui:repeat value="#{producto.objetoObtenido.imagenporproductos.toArray()}" var="img">
+							    <div class="carousel-item" style="height: 300px;">
+							    
+									<o:graphicImage value="#{img.ipImagen}" dataURI="true" class="card-img-top imgcarousel"/>
+
+							    </div>
+							  </ui:repeat>
+							  </div>
+							  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+							    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							    <span class="sr-only">Previous</span>
+							  </a>
+							  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+							    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+							    <span class="sr-only">Next</span>
+							  </a>
+							</div>
+							</ui:fragment>
+							
+						</div>
+						</h:form>
+					</div>
+					<h:form style="display: contents">
+					<div class="col-8" style="border-left: 1px solid #ddd;">
+						<h3 style="margin-top: 35px"><b>#{producto.objetoObtenido.proNombre} #{producto.objetoObtenido.proContenido}#{producto.objetoObtenido.unidadmedida.umAbreviacion}</b></h3>
+						<h5>
+						<ui:fragment rendered="#{producto.objetoObtenido.proCantidad > 0}">Stock Disponible</ui:fragment>
+						<ui:fragment rendered="#{producto.objetoObtenido.proCantidad == 0}">Stock Agotado</ui:fragment>
+						
+						</h5>
+						
+						<hr/>
+						<h1>
+							<script>
+					    		let precio = #{producto.objetoObtenido.proPrecio};
+					    		var total = new Intl.NumberFormat('es-ES').format(precio);
+					    		document.write("$" + total);
+							</script>
+						</h1>
+						<p>
+							#{producto.objetoObtenido.proDescripcion}
+						</p>
+						<div class="form-group col-8" style="display: flex; padding: 0;">
+							<label class="col-5" style="padding-top: 7px;">
+								<h:outputText value = "#{translate['product.type']}:"/>
+							</label>
+							<h:selectOneMenu value="#{producto.objetoObtenido.tpId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['menu.protype'])}"
+								styleClass="custom-select" id="protype-i" style="margin-left: 0p;">
+								<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+								<f:selectItems value="#{tipoProducto.obtenerLista()}"
+									var="u" itemLabel="#{u.tpNombre}" itemValue="#{u.tpId}" />
+								<f:ajax event="change" render="protypeMsg"/>
+							</h:selectOneMenu>
+							<br /><h:message id="protypeMsg" for="protype-i" styleClass="validation-tooltip" />
+						</div>
+						<div class="form-group col-8" style="display: flex; padding: 0;">
+							<label class="col-5" style="padding-top: 7px;"><h:outputText value = "Stock: "/></label>
+							<h:inputText value="#{producto.objetoObtenido.proCantidad}"
+								styleClass="form-control numberinp" style="margin-left: 0;"/>
+							  <div class="input-group-append">
+							    <span class="input-group-text plus">+</span>
+							    <span class="input-group-text minus">-</span>
+							  </div>
+						</div>
+						<script type="text/javascript">
+							let number;
+							$(".plus").click(function(){
+								number = $(".numberinp").val();
+					    		let elemnt = document.createElement("div");
+					    		number++;
+					    		elemnt.innerHTML = number;
+					    		let value = elemnt.innerText;
+								$(".numberinp").val(value);
+							});
+							$(".minus").click(function(){
+								number = $(".numberinp").val();
+					    		let elemnt = document.createElement("div");
+					    		number--;
+					    		elemnt.innerHTML = number;
+					    		let value = elemnt.innerText;
+								$(".numberinp").val(value);
+							});
+						</script>
+					</div>
+					</h:form>
+				</div>
+				<div class="row" style="border: solid 1px #eee; margin: 0; padding: 10px 0; background-color: #f5f5f5;">
+					<div class="col-12">
+						<h4>#{translate['menu.leaflet']}</h4>
+						<p>
+						<h:form>
+							<ui:repeat value="#{producto.objetoObtenido.prospectos.toArray()}" var="prs">
+							<span class="prospectoBadget"><b>#{prs.prsNombre}: </b>#{prs.prsDescripcion} 
+							<b style="margin-left: 30px">
+							<h:commandButton value="x" styleClass="ximg" action="#{prospectoproducto.eliminar(prs.prsId, producto.objetoObtenido.proId)}"></h:commandButton>
+							</b>
+							
+							</span>
+							</ui:repeat>
+							<ui:fragment rendered="#{empty producto.objetoObtenido.prospectos}">
+								<p>Aún no existen prospectos asociados a este producto.</p>
+							</ui:fragment>
+							<br/>
+							<a data-toggle="modal" data-target="#ModalAgregarProspecto"
+								href="#exampleModal">Añadir Prospecto</a>
+						</h:form>
+						</p>
+					</div>
+						
+				</div>
+				</div>
+			</div>
+			<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">
+											<h:outputText
+												value="#{translate['form.add']} #{translate['warehouse']}" />
+										</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<h:form id="imgForm" enctype="multipart/form-data">
+									<div class="modal-body">
+											<div class="form-group col-12">
+											<div>
+											<o:outputLabel for="file" value="Image: " />					        
+										         <div class="custom-file">
+												    <o:inputFile id="file" value="#{imagenproducto.archivoImg}" class="custom-file-input"
+										            accept="image/*" acceptMessage="#{translate['form.filetype ']} {2}"
+										            maxsize="#{1024 * 1024}" maxsizeMessage="#{translate['form.maxfilesize']} {2}">
+										            <f:ajax listener="#{imagenproducto.mostrarImg}" render="resultImg" />
+										        	</o:inputFile>
+												    <label class="custom-file-label" for="file">#{translate['form.choosefile']}</label>
+												 </div>
+										        <h:message id="file_m" for="file" />
+										    </div>
+										    <hr />
+										    	<h:panelGrid columns="4" id="resultImg" class="centerimg">
+												  	<ui:repeat value="#{producto.objetoObtenido.imagenporproductos}" var="img">
+												  	 	 <div style="position: relative; display: flex;">
+												      		<o:graphicImage value="#{img.ipImagen}" dataURI="true" width="100" height="100"/>
+												      		<h:commandButton value="X" id="submit-button"
+															action="#{imagenproducto.eliminar(img)}" styleClass="ximg">
+														</h:commandButton>
+														</div>
+												  	</ui:repeat>
+											    	<o:graphicImage value="#{imagenproducto.imagen.ipImagen}" dataURI="true" width="100" height="100"
+											        rendered="#{not empty imagenproducto.imagen.ipImagen}" />
+											        
+											    </h:panelGrid>
+									        </div>		
+									</div>
+									<script>
+									// Add the following code if you want the name of the file appear on select
+									$(".custom-file-input").on("change", function() {
+									  var fileName = $(this).val().split("\\").pop();
+									  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+									});
+									</script>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">#{translate['form.cancel']}</button>
+										<h:commandButton value="#{translate['form.submit']}" id="submit-button"
+											action="#{imagenproducto.registrar(producto.objetoObtenido.proId)}" styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+									</h:form>
+								</div>
+							</div>
+						</div>
+						
+				
+						<div class="modal fade" id="ModalAgregarProspecto" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">
+											<h:outputText
+												value="#{translate['form.add']} #{translate['leaflet']}" />
+										</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<h:form id="prospectoForm">
+									<div class="modal-body">
+											<div class="row" style="margin-bottom: 20px">
+												<div class="col-9">
+													<input type="text" class="prsName form-control" disabled="true"></input>
+													<h:inputHidden value="#{prospectoproducto.prsId}"
+													class="form-control emailFrom" id="emailFrom" required="true"/>
+												</div>
+												<div class="col-3">
+													<h:commandButton value="#{translate['form.add']}#{translate['leaflet']}" id="submit-button"
+													action="#{prospectoproducto.registrar(producto.objetoObtenido.proId)}" styleClass="btn btn-success">
+													</h:commandButton>
+												</div>
+											</div>
+											<h4>Seleccionar Prospecto de la Tabla Prospectos</h4>
+											<h:dataTable value="#{prospecto.obtenerLista()}" var="obj"
+											styleClass="main-grid prospectogrid table table-striped table-sm" id="main-grid"
+											columnClasses="column1, column2, column3, column4, column5">
+											<h:column>
+												<f:facet name="header">
+													<h:outputLabel value="Id" />
+												</f:facet>
+												<h:outputLabel value="#{obj.prsId}" style="margin-bottom: 0;" />
+											</h:column>
+				
+											<h:column>
+												<f:facet name="header">
+													<h:outputLabel value="#{translate['leaflet.name']}" />
+												</f:facet>
+												#{obj.prsNombre}
+											</h:column>
+											
+											<h:column>
+												<f:facet name="header">
+													<h:outputLabel value="#{translate['leaflet.description']}" />
+												</f:facet>
+												#{obj.prsDescripcion}
+											</h:column>
+											
+											<h:column>
+												<f:facet name="header">
+													#{translate['leaflet.type']}
+												</f:facet>
+												<h:outputLabel value="#{obj.prsTipo}" style="margin-bottom: 0;" />
+											</h:column>				
+										</h:dataTable>
+									</div>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">#{translate['form.cancel']}</button>
+									</div>
+									</h:form>
+								</div>
+							</div>
+						</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

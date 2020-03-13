@@ -1,0 +1,207 @@
+body{
+	font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+
+.menu-header{
+	height: 90px;
+	display: flex;
+	font-family: 'Poppins', sans-serif;
+}
+
+.session-info{
+	position: absolute;
+	text-align: center;
+	margin: 10px 10px 2px 10px;
+}
+
+.profile{
+	margin: auto;
+	height: 30px;
+	width: 30px;
+
+}
+
+.logo-img {
+    margin: auto;
+    width: 400px;
+    height: 80px;
+}
+
+.finish-session-container{
+	position: absolute;
+    right: 0;
+	margin: 30px 10px;
+	display: flex;
+}
+
+.finish-session-button{
+	background-color: #2b5ac3;
+    border: none;
+    color: white;
+    padding: 6px;
+    border-radius: 6px;
+    margin-left: 30px;
+}
+
+.finish-session-button:hover{
+	background-color: #0b3aa3;
+	text-decoration: none;
+	color: white;
+}
+
+.menu-dashboard {
+	width: 100%;
+	text-align: center;
+	background-color: #689cc5;
+	padding: 10px;
+	font-family: 'Poppins', sans-serif;
+}
+
+.menu-item{
+	margin: 0 15px;
+    padding: 10px 20px 10px 20px;
+	background-color: #3d739e;
+	color: white;
+	text-decoration: none;
+}
+
+.menu-dashboard .menu-item:hover{
+	background-color: #1d537e;
+	color: white;
+	text-decoration: none;
+}
+
+.submenu-container{
+	position: relative; 
+	display: inline-block
+}
+
+.submenu{
+	position: absolute;
+	padding: 0;
+    width: 100%;
+    list-style: none;
+    margin-top: 5px;
+    display:none;
+}
+
+.submenu li{
+	background-color: #5484ab;
+	border: solid 1px #3b6282;
+	border-bottom: none;
+    /*border-bottom: solid 1px #3b6282;
+    border-right: solid 1px #3b6282; */
+	line-height: 16px;
+	padding: 7px 0 7px 0;
+}
+
+.submenu li:hover{
+	background-color: #36648a;
+}
+
+.submenu li:last-child{
+	border-bottom: solid 1px #3b6282;
+}
+
+.submenu li a{
+	color: white;
+	line-height: 0.5px;
+}
+
+.item-father:after{
+	font-size: 12px;
+	content: " ▼"
+}
+
+.item-father:hover::after{
+	content: " ►"
+}
+
+.menu-dashboard .item-father:hover + .submenu, .submenu:hover{
+	display: block;
+	z-index: 1;
+}
+
+.subitem-father:hover .submenu-son, .submenu-son:hover{
+	display:inline;
+}
+
+.submenu-son{
+	position: absolute;
+	padding: 0;
+    width: 100%;
+    list-style: none;
+    display:none;
+    margin: -8px 0 0px 30px;
+}
+
+.main-container{
+
+}
+
+.orders-container{
+
+}
+
+.stock-container{
+    display: flex;
+}
+
+.raw-material-stock{
+	padding: 20px;
+	width: 50%;
+}
+
+.products-stock{
+	padding: 20px;
+	width: 50%;
+}
+
+.stock-container div h3{
+    font-size: 18px;
+}
+
+.clients-container{
+
+}
+
+.state{
+	margin-right: 5px;
+	padding: 0.5px 10px;
+	border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.low-stock{
+    background-color: #b72828;;
+}
+
+.medium-stock{
+    background-color: #d28322;
+}
+
+.sold-stock{
+    background-color: #888;
+}
+.full-stock{
+    background-color: #00cc66;
+}
+
+textarea {
+   resize: none;
+}
+.spanish-btn{
+	background: url(../images/espanol.png) no-repeat;
+    width: 40px;
+    background-size: 100%;
+	margin-right: 10px;
+    border: 0;
+}
+
+.english-btn{
+	background: url(../images/ingles.jpg) no-repeat;
+    width: 40px;
+    background-size: 100%;
+    border: 0;
+}

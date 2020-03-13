@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<title>Bodega</title>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.warehouse']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+			<style>
+			.column5, .column6 {
+				width: 30px;
+			}
+			</style>
+				<div class="img-header" style="background: url(#{resource['images/stock.jpeg']}); background-size: cover; height: 180px; background-position-y: 220px;">
+					
+				</div>
+				<div class="main-container">
+					<div class="grid-container" style="width: 90%;">
+					<nav aria-label="breadcrumb">
+						  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+						  <li class="breadcrumb-item">#{translate['menu.stocking']}</li>
+						  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.producttrans']}</li>
+						  </ol>
+					</nav>
+
+					<h:form id="mainForm">
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+							<a data-toggle="modal" data-target="#ModalAgregar"
+								href="#exampleModal"><img width="24"
+								src="../resources/images/SI/Grid/add.png" /></a>
+						</div>
+						</nav>
+
+						<h:dataTable value="#{movimientop.obtenerLista()}" var="obj"
+							styleClass="main-grid table table-striped table-sm"
+							id="main-grid"
+							columnClasses="column1, column2, column3, column4, column5, column6">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								<h:outputLabel value="#{obj.mpId}" style="margin-bottom: 0;" />
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['protrans.date']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.mpFecha}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['protrans.pro']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.producto.proNombre}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['protrans.us']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.usuario.usNombreDeUsuario}"
+									style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['protrans.optype']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.tipooperacion.toNombre}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+								
+							</h:column>							
+						</h:dataTable>
+					</h:form>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>Hola Mundo JSF</title>
+
+</h:head>
+<h:body>
+	<ui:composition
+		template="resources/templates/landingPageTemplate.xhtml">
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css" href="resources/css/style.css" />
+			<div class="principal">
+
+				<div class="main-container">
+					<div class="banner">
+						<img src="resources/images/banner2.jpg" />
+					</div>
+
+					<div class="content-div">
+						<div class="description-container">
+							<hr />
+							<h1>Descripción</h1>
+							<p style="font-size: 22px">La compañía DUOPHARMA se
+								caracteriza por elaboración de productos tópicos, que tienen
+								componentes naturales seleccionados de la mejor calidad,
+								fabricados a la medida pensando siempre en las necesidades y el
+								beneficio de nuestros clientes.</p>
+							<hr />
+						</div>
+						<div>
+							<h1>Productos</h1>
+							<div class="products-container">
+								<div class="img-container">
+									<img width="300" src="resources/images/bloqueador.jpg" /> <span><h2>Bloqueador</h2></span>
+								</div>
+								<div class="img-container">
+									<img width="300" src="resources/images/avon-derma.jpg" /> <span><h2>Crema
+											Dermatológica</h2></span>
+								</div>
+								<div class="img-container">
+									<img width="300" src="resources/images/betametasona.jpg" /> <span><h2>Betametasona</h2></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<?php
+       include 'templatefooter.php';
+	    ?>
+				<div class="footer-footer" style="background-color: #7a8e9d">
+					SIFC: Sistema de Inventario y Fabricación de Cosméticos <a
+						href="inindex.php" style="margin-right: 5px;"><img width="30"
+						src="resources/images/ingles.jpg" /></a> <a href="#"><img
+						width="30" src="resources/images/espanol.png" /></a>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

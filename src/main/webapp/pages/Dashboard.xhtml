@@ -1,0 +1,243 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<title>Formulas</title>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<ui:define name="pageTitle"><h:outputText value = "SIFC - Dashboard"/></ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+				<script src="../resources/js/jquery.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<script src="../resources/js/d3.v5.min.js"></script>
+			<script src="../resources/js/c3.min.js"></script>
+			<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+			<script src="../resources/js/script.js" type="text/javascript"></script>
+			<div class="img-header" style="background: url(#{resource['images/dash.jpg']}); background-size: cover; height: 180px; background-position-y: 300px;">
+					
+			</div>
+			<div class="main-container" style="padding: 0 100px; font-family: 'Poppins', sans-serif;">
+			<div style="position: relative; top: -80px;">
+			<nav aria-label="breadcrumb">
+				  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+				  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.index']}</li>
+				  </ol>
+			</nav>
+			
+			<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') != 'Cliente'}">
+			<div class="row" style="margin: 0; padding: 20px 0; border: solid 1px #eee;background-color: #f5f5f5;">
+			<div class="col-6">
+			<h3 style="text-align: center">#{translate['dashboard.topthreerack']}</h3>
+			<div class="row" style="margin: 0">
+			<ui:repeat value="#{estanteria.obtenerListaCapacidad()}" var="est">
+				<div class="col-4">
+				<h5 style="text-align: center; font-size: 14px; margin: 0">#{translate['rack']} #{est.estId} - #{translate['warehouse']}: #{est.boDireccion}</h5>
+				<div id="chart#{est.estId}"></div>
+				</div>
+				<script type="text/javascript">
+				
+				$( document ).ready(function() {
+				 return new Promise(resolve => {
+					    setTimeout(() => {
+				var chart#{est.estId} = c3.generate({
+				 	color: {
+					    pattern: ["#38536E", "#EA523A"]
+					  },
+					size: {
+				        height: 200,
+				        width: 200
+				    },
+					bindto: '#chart#{est.estId}',
+				    data: {
+				        columns: [
+				            ['CapacidadRestante', #{est.estCapacidad} - #{est.estCapacidadOcupada}],
+				            ['CapacidadOcupada', #{est.estCapacidadOcupada}]
+				        ],
+				        type : 'pie'
+				    }
+					});
+					});
+			    }, 1500);
+				});
+				</script>
+				</ui:repeat>
+			</div>
+			</div>
+			<div class="col-6">
+						<a onclick="exportImageAsPNG()" data-dismiss="modal" data-toggle="modal" href="#GeneratedImg">Generar PNG</a>
+			
+				<h3 style="text-align: center">#{translate['dashboard.toptenpro']}</h3>
+				<div id="barChart"></div>
+				<script type="text/javascript">
+				let chart;
+				$( document ).ready(function() {
+				var s = "#{est.estId}";
+				chart = c3.generate({
+					bindto: "#barChart",
+				    data: {
+				        columns: [
+				            
+				        ],
+				        type: 'bar'
+				    },
+				    bar: {
+				        width: {
+				            ratio: 0.8 
+				        }
+				    }
+				});
+				});
+
+				function exportImageAsPNG(){
+			        var svgElements = $("#chart").find('svg');
+			        var svg ;
+			        svgElements.each(function() {
+			            svg = this;
+			        });
+			        var img = document.getElementById("fromcanvas");
+			        svg.toDataURL("image/png", {
+			            callback: function(data) {
+			                img.setAttribute("src", data)
+			                document.getElementById("downloadlink").href = data;
+			                document.getElementById("downloadlink").style.display = "block";
+			            }
+			        })
+			        
+			    };
+				</script>
+			<ui:repeat var="pro" value="#{producto.obtenerListaCantidad()}">
+				<script type="text/javascript">
+				setTimeout(function () {
+					chart.load({
+				        columns: [
+				            ['#{pro.proNombre}', #{pro.proCantidad}]
+				        ]
+				    });
+				}, 1000);
+			    
+				</script>
+			</ui:repeat>
+			</div>
+			</div>
+			
+			
+			<div class="modal fade" id="GeneratedImg" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+					<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">
+						<h:outputText value="#{translate['form.pnggenerate']}"/>
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					</div>
+					<div class="modal-body">
+						<a style="display: none" id="downloadlink" href="#" download="#{translate['dashboard.toptenpro']}">
+						<h:outputText value="#{translate['form.download']}"/> <img src="" id="fromcanvas"></img></a>
+					</div>
+				</div></div></div>
+				</ui:fragment>
+				
+				
+				
+				<!-- VISTA DEL CLIENTE -->
+				<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Cliente'}">
+				<div class="row" style="margin: 0; background-color: #fafafa">
+					<h2 style="padding: 40px 20px 0 20px; text-align: center; width: 100%;">Últimos productos</h2>
+					<div class="col-12">
+						<div class="row d-flex justify-content-center" style="margin: 0; padding: 30px 0 30px 0">
+							  <!-- SI SE VA APLICAR CARRUSEL EN VEZ DE IMAGEN ESTÁTICA, QUITAR COMENTARIOS DE ESTA SECCIÓN DE CÓDIGO Y UBICARLA DESPUÉS DEL REPEAT 
+						  	<ui:fragment rendered="#{not empty pro.imagenporproductos}">
+  							<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
+							  <div class="carousel-inner">
+							  <ui:repeat value="#{pro.imagenporproductos}" var="img">
+							    <div class="carousel-item" style="height: 300px;">
+							      <o:graphicImage value="#{img.ipImagen}" dataURI="true" class="card-img-top imgcarousel"/>
+							    </div>
+							  </ui:repeat>
+							  </div>
+							  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+							    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							    <span class="sr-only">Previous</span>
+							  </a>
+							  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+							    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+							    <span class="sr-only">Next</span>
+							  </a>
+							</div>
+							</ui:fragment>
+							 -->
+						<ui:repeat value="#{producto.obtenerListaTopProductos()}" var="pro">
+						<div class="card col-3" style="width: 18rem; margin: 10px 20px 0 10px; padding: 0">
+						  <h:graphicImage rendered="#{empty pro.imagenporproductos}" library="images" class="card-img-top" name="noprimg.png" />
+						  <o:graphicImage rendered ="#{not empty pro.imagenporproductos}" value="#{pro.imagenporproductos.toArray()[0].ipImagen}" dataURI="true" class="card-img-top"/>
+
+						  <div class="card-body" style="padding: 20px 20px 0 20px">
+						    <h5 class="card-title" style="margin-bottom: .15rem">#{pro.proNombre}</h5>
+						    <p class="card-text" style="color: #777; font-size: 14px">
+						    <script>
+						    var str = "#{pro.proDescripcion}";
+						    var n = str.length;
+						    /* <![CDATA[ */
+						    if(n >= 59){
+						    	if(str.charAt(58) == ' '){
+						    		str = str.slice(0, 58);
+							    	document.write(str + "...");
+							    } else{
+							    	str = str.slice(0, 59);
+							    	document.write(str + "...");
+								}
+						    	
+							} else{
+								document.write(str);
+							}
+					    	/* ]]> */
+						    </script>
+						    </p>
+						    <hr/>
+						    <div class="row" style="margin: 0">
+						    	<p class="card-text col-4" style="padding: 0"><b>
+						    	<script>
+						    		let precio#{pro.proId} = #{pro.proPrecio};
+						    		var total = new Intl.NumberFormat('es-ES').format(precio#{pro.proId});
+						    		document.write("$" + total);
+						    	</script>
+						    	</b></p>
+					    		<div class="col-8" style="text-align: right">
+					    			<h:link outcome="ProductoDetalleRead.xhtml" value="Ver Más" >
+									  <f:param name="id" value="#{pro.proId}" />
+									</h:link>
+					    		</div>
+						    	
+						    </div>
+						    
+						  </div>
+						</div>
+						</ui:repeat>
+						</div>
+					</div>
+				</div>
+			</ui:fragment>
+			
+			</div>
+			</div>
+			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

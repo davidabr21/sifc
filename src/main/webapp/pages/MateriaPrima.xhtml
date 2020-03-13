@@ -1,0 +1,458 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+	<ui:define name="pageTitle"><h:outputText value = "SIFC - #{translate['menu.rawmaterial']}"/></ui:define>
+		<ui:define name="mainContain">
+			
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/jquery.dataTables.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<script src="../resources/js/jquery.dataTables.min.js"></script>
+			<script src="../resources/js/grid.js"></script>
+			<style>
+			.column4, .column5 {
+				width: 30px;
+			}
+			</style>
+			<div class="img-header" style="background: url(#{resource['images/lab.jpg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+				
+			</div>
+			<div class="main-container">
+				
+				<div class="grid-container" style="width: 90%;">
+				<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+					  <li class="breadcrumb-item"><a href="#">#{translate['menu.stocking']}</a></li>
+					  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.rawmaterial']}</li>
+					  </ol>
+				</nav>
+					<h:form id="mainForm">
+
+
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+							<a data-toggle="modal" data-target="#ModalAgregar"
+								href="#exampleModal"><img width="24"
+								src="../resources/images/SI/Grid/add.png" /></a>
+						</div>
+
+						</nav>
+
+						<h:dataTable value="#{materiaprima.obtenerLista()}" var="obj"
+							styleClass="main-grid table table-striped table-sm" id="main-grid"
+							columnClasses="column1, column2, column3, column4, column5">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								<h:outputLabel value="#{obj.mpId}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['rawmaterial.name']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.mpNombre}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['rawmaterial.amount']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.mpCantidad}"
+									style="margin-bottom: 0;" /> #{translate['rawmaterial.units']}
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['rawmaterial.content']}" />
+								</f:facet>
+								#{obj.mpContenido} <b>#{obj.unidadmedida.umNombre}</b>
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['rawmaterial.condition']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.mpCondicionConservacion}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['rawmaterial.description']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.mpDescripcion}"
+									style="margin-bottom: 0;" />
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['rawmaterial.type']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.tipomateriaprima.tmpNombre}"
+									style="margin-bottom: 0;" />
+							</h:column>
+				
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{materiaprima.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#modalDelete" />
+									<f:ajax render="deleteForm" />
+									<img width="24" src="../resources/images/SI/Grid/remove.png" />
+								</h:commandLink>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value="" actionListener="#{materiaprima.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#EditModal" />
+									<f:ajax render="editForm" />
+									<img width="24" src="../resources/images/SI/Grid/edit.png" />
+								</h:commandLink>
+							</h:column>
+
+						</h:dataTable>
+						<div id="pager"></div>
+
+			<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel"><h:outputText value = "#{translate['form.add']} #{translate['menu.rawmaterial']}"/></h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- PopUp body -->
+									<div class="modal-body">
+
+										<div class="form-row">
+											<div class="form-group col-6">
+												<label><h:outputText value = "Id:"/></label>
+												<h:inputText disabled="true" value="#{materiaprima.materia.mpId}"
+													styleClass="form-control" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.name']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.materia.mpNombre}" id="name-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.name'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="2" maximum="40" message="#{of:format2(translate['validation.betweenchar'], 2, 40)}" />
+													<f:ajax event="keyup" render="nameMsg" />
+													<f:ajax event="blur" render="nameMsg" />
+												</h:inputText>
+												<h:message id="nameMsg" for="name-i" styleClass="validation-tooltip" />
+												
+											</div>
+											
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.content']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.materia.mpContenido}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.content'])}"
+													styleClass="form-control" id="quantity-i" converterMessage="#{translate['validation.onlyNums']}">
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="100000" message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+													<f:ajax event="keyup" render="quantityMsg" />
+													<f:ajax event="blur" render="quantityMsg" />	
+												</h:inputText>
+												<h:message id="quantityMsg" for="quantity-i" styleClass="validation-tooltip" />
+											</div>
+											
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.unitmeasure']}:"/>
+												</label>
+												<h:selectOneMenu value="#{materiaprima.umId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['rawmaterial.unitmeasure'])}"
+														styleClass="custom-select" id="umname-i">
+														<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItems value="#{unidadMedida.obtenerLista()}"
+															var="u" itemLabel="#{u.umNombre}" itemValue="#{u.umId}" />
+														<f:ajax event="change" render="unitMsg"/>
+												</h:selectOneMenu>
+												<br />
+												<h:message id="unitMsg" for="umname-i" styleClass="validation-tooltip" />
+											</div>
+											
+											<div class="form-group col-12">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.condition']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.materia.mpCondicionConservacion}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.condition'])}"
+													styleClass="form-control" id="lastmodified-i">
+													<f:ajax event="keyup" render="priceMsg" />
+													<f:ajax event="blur" render="priceMsg" />	
+												</h:inputText>
+												<h:message id="priceMsg" for="lastmodified-i" styleClass="validation-tooltip" />
+											</div>
+											
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.type']}:"/>
+												</label>
+												<h:selectOneMenu value="#{materiaprima.tmpId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['rawmaterial.type'])}"
+														styleClass="custom-select" id="tmpname-i">
+														<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItems value="#{tipomateria.obtenerLista()}"
+															var="u" itemLabel="#{u.tmpNombre}" itemValue="#{u.tmpId}" />
+														<f:ajax event="change" render="protypeMsg"/>
+												</h:selectOneMenu>
+												<br />
+												<h:message id="protypeMsg" for="tmpname-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.amount']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.materia.mpCantidad}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.mpCantidad'])}"
+													styleClass="form-control" id="amount-i" converterMessage="#{translate['validation.onlyNums']}">
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="100000" message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+													<f:ajax event="keyup" render="amountMsg" />
+													<f:ajax event="blur" render="amountMsg" />	
+												</h:inputText>
+												<h:message id="amountMsg" for="amount-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-12">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.description']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.materia.mpDescripcion}" id="desc-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.description'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="500" message="#{of:format2(translate['validation.betweenchar'], 5, 500)}" />
+													<f:ajax event="keyup" render="descMsg" />
+													<f:ajax event="blur" render="descMsg" />
+												</h:inputText>
+												<h:message id="descMsg" for="desc-i" styleClass="validation-tooltip" />
+												
+											</div>
+											
+										</div>
+
+									</div>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">
+											<h:outputText value = "#{translate['form.cancel']}"/>
+										</button>
+										<h:commandButton value="#{translate['form.submit']}" id="submit-button"
+											action="#{materiaprima.registrar()}"
+											styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+
+			<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<h:form id="editForm">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">
+									<h:outputText value = "#{translate['form.edit']} #{translate['rawmaterial']}: "/><i><h:outputText
+											value="#{materiaprima.objetoObtenido.mpNombre}" /></i>
+								</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="form-row">
+											<div class="form-group col-6">
+												<label><h:outputText value = "Id:"/></label>
+												<h:inputText disabled="true" value="#{materiaprima.objetoObtenido.mpId}"
+													styleClass="form-control" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+												<h:outputText value = "#{translate['rawmaterial.name']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.objetoObtenido.mpNombre}" id="nameMP-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.name'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="40" message="#{of:format2(translate['validation.betweenchar'], 3, 40)}" />
+													<f:ajax event="keyup" render="nameMsg" />
+													<f:ajax event="blur" render="nameMsg" />
+												</h:inputText>
+												<h:message id="nameMsg" for="nameMP-i" styleClass="validation-tooltip" />
+												
+											</div>
+											
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.content']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.objetoObtenido.mpContenido}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.content'])}"
+													styleClass="form-control" id="quantity-i" converterMessage="#{translate['validation.onlyNums']}">
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="100000" message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+													<f:ajax event="keyup" render="quantityMsg" />
+													<f:ajax event="blur" render="quantityMsg" />	
+												</h:inputText>
+												<h:message id="quantityMsg" for="quantity-i" styleClass="validation-tooltip" />
+											</div>
+											
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.unitmeasure']}:"/>
+												</label>
+												<h:selectOneMenu value="#{materiaprima.objetoObtenido.unidadmedida.umId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['menu.measureunit'])}"
+													styleClass="custom-select" id="measureunitMP-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{unidadMedida.obtenerLista()}"
+														var="u" itemLabel="#{u.umNombre}" itemValue="#{u.umId}" />
+													<f:ajax event="change" render="measureunitMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="measureunitMsg" for="measureunitMP-i" styleClass="validation-tooltip" />
+											</div>
+											
+											
+											
+											<div class="form-group col-12">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.condition']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.objetoObtenido.mpCondicionConservacion}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.condition'])}"
+													styleClass="form-control" id="umMP-i">
+													<f:ajax event="keyup" render="priceMsg" />
+													<f:ajax event="blur" render="priceMsg" />	
+												</h:inputText>
+												<h:message id="priceMsg" for="umMP-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.type']}:"/>
+												</label>
+												<h:selectOneMenu value="#{materiaprima.objetoObtenido.tipomateriaprima.tmpId}" required="true" requiredMessage="#{of:format1(translate['validation.selection'], translate['rawmaterial.type'])}"
+													styleClass="custom-select" id="tmpMP-i">
+													<f:selectItem itemLabel="#{translate['form.select']}" itemValue="#{null}" noSelectionOption="true" />
+													<f:selectItems value="#{tipomateria.obtenerLista()}" var="u"
+														itemLabel="#{u.tmpNombre}" itemValue="#{u.tmpId}" />
+													<f:ajax event="change" render="formulaMsg"/>
+												</h:selectOneMenu>
+												<br /><h:message id="formulaMsg" for="tmpMP-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-6">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.amount']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.objetoObtenido.mpCantidad}" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.mpCantidad'])}"
+													styleClass="form-control" id="amount-i" converterMessage="#{translate['validation.onlyNums']}">
+													<o:validator validatorId="javax.faces.LongRange" minimum="0" maximum="100000" message="#{of:format2(translate['validation.betweennum'], 0, 100000)}" />
+													<f:ajax event="keyup" render="amountMsg" />
+													<f:ajax event="blur" render="amountMsg" />	
+												</h:inputText>
+												<h:message id="amountMsg" for="amount-i" styleClass="validation-tooltip" />
+											</div>
+											<div class="form-group col-12">
+												<label>
+													<h:outputText value = "#{translate['rawmaterial.description']}:"/>
+												</label>
+												<h:inputText value="#{materiaprima.objetoObtenido.mpDescripcion}" id="desc-i"
+													styleClass="form-control" required="true" requiredMessage="#{of:format1(translate['validation.required'], translate['rawmaterial.description'])}">
+													<o:validator validatorId="javax.faces.Length" minimum="5" maximum="500" message="#{of:format2(translate['validation.betweenchar'], 5, 500)}" />
+													<f:ajax event="keyup" render="descMsg" />
+													<f:ajax event="blur" render="descMsg" />
+												</h:inputText>
+												<h:message id="descMsg" for="desc-i" styleClass="validation-tooltip" />
+												
+											</div>
+										</div>
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">
+									<h:outputText value = "#{translate['form.cancel']}"/>
+								</button>
+								<h:commandButton action="#{materiaprima.actualizar()}"
+									value="#{translate['form.update']}" styleClass="btn btn-success" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">
+								<h:outputText value = "#{translate['form.warning']}"/>
+							</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- PopUp body -->
+						<h:form id="deleteForm">
+							<div class="modal-body">
+								<p>
+									<span style="margin: 0 10px 0 0;"><img width="48"
+										src="../resources/images/SI/warning.png" /> </span> 
+										<h:outputText value = "#{of:format2(translate['form.confirmdeletef'], translate['rawmaterial'], materiaprima.objetoObtenido.mpNombre)}"/>
+								</p>
+							</div>
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">
+									<h:outputText value = "#{translate['form.cancel']}"/>
+									</button>
+
+								<h:commandLink actionListener="#{materiaprima.eliminar()}"
+									styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

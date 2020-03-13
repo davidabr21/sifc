@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Tipos de Producto</title>
+</h:head>
+<h:body>
+
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+	<ui:define name="pageTitle"><h:outputText value = "SIFC - #{translate['menu.TipoProd']}"/></ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<style>
+.column4, .column5 {
+	width: 30px;
+}
+</style>
+			<div class="img-header" style="background: url(#{resource['images/lab.jpg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+				
+			</div>
+			<div class="main-container">
+				<div class="grid-container" style="width: 90%;">
+				<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+					  <li class="breadcrumb-item"><a href="#">#{translate['menu.stocking']}</a></li>
+					  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.protype']}</li>
+					  </ol>
+				</nav>
+
+					<h:form id="mainForm">
+
+
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+								<a data-toggle="modal" data-target="#ModalAgregar"
+									href="#exampleModal"><img width="24"
+									src="../resources/images/SI/Grid/add.png" /></a>
+						</div>
+
+						</nav>
+
+						<h:dataTable value="#{tipoProducto.obtenerLista()}" var="obj"
+							styleClass="table table-striped table-sm"
+							columnClasses="column1, column2, column3, column4, column5">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								<h:outputLabel value="#{obj.tpId}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Nombre" />
+								</f:facet>
+								<h:outputLabel value="#{obj.tpNombre}" style="margin-bottom: 0;" />
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Descripción" />
+								</f:facet>
+								<h:outputLabel value="#{obj.tpDescripcion}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value=""
+									actionListener="#{tipoProducto.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#modalDelete" />
+									<f:ajax render="deleteForm" />
+									<img width="24" src="../resources/images/SI/Grid/remove.png" />
+								</h:commandLink>
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value=""
+									actionListener="#{tipoProducto.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#EditModal" />
+									<f:ajax render="editForm" />
+									<img width="24" src="../resources/images/SI/Grid/edit.png" />
+								</h:commandLink>
+							</h:column>
+
+						</h:dataTable>
+
+						<!-- POP UP PARA CREACIÓN -->
+						<!-- El PopUp -->
+						<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Agregar Tipo de Producto</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- PopUp body -->
+									<div class="modal-body">
+
+										<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>Id:</label>
+												<h:inputText disabled="true" value="#{tipoProducto.tpId}"
+													styleClass="form-control" />
+											</div>
+
+											<div class="form-group col-6">
+												<label>Nombre:</label>
+												<h:inputText value="#{tipoProducto.tpNombre}"
+													styleClass="form-control" />
+											</div>
+
+										</div>
+										<div class="form-row">
+										<div class="form-group col-12">
+												<label>Descripción:</label>
+												<h:inputTextarea rows="5" value="#{tipoProducto.tpDescripcion}"
+													styleClass="form-control" style="resize: none;" />
+											
+
+										</div>
+										</div>
+
+									</div>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">Cancelar</button>
+										<h:commandButton value="Registrar" id="submit-button"
+											action="#{tipoProducto.registrar()}"
+											styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+
+			<!-- POP UP PARA EDICIÓN -->
+			<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<h:form id="editForm">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Editar Tipo de Producto: <i><h:outputLabel value="#{tipoProducto.objetoObtenido.tpNombre}" /></i></h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+
+							<div class="modal-body">
+								<div class="form-row">
+
+									<div class="form-group col-6">
+										<label>Id:</label>
+										<h:inputText disabled="true"
+											value="#{tipoProducto.objetoObtenido.tpId}"
+											styleClass="form-control" />
+									</div>
+
+									<div class="form-group col-6">
+										<label>Nombre:</label>
+										<h:inputText value="#{tipoProducto.objetoObtenido.tpNombre}"
+											styleClass="form-control" />
+									</div>
+
+								</div>
+								
+								<div class="form-row">
+									<div class="form-group col-12">
+										<label>Descripción:</label>
+										<h:inputTextarea rows="5" value="#{tipoProducto.objetoObtenido.tpDescripcion}"
+											styleClass="form-control" id="nombreTxt" style="resize: none;"/>
+									</div>
+
+								</div>
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">Cancelar</button>
+								<h:commandButton
+									action="#{tipoProducto.actualizar()}"
+									value="Actualizar" styleClass="btn btn-success" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+
+
+			<!-- POP UP DE CONFIRMACIÓN PARA ELIMINAR REGISTRO -->
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">Advertencia</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- PopUp body -->
+						<h:form id="deleteForm">
+							<div class="modal-body">
+								<p>
+									<span style="margin: 0 10px 0 0;"><img width="48"
+										src="../resources/images/SI/warning.png" /> </span> ¿Está seguro que
+									desea eliminar el Tipo de Producto <b><h:outputLabel value="#{tipoProducto.objetoObtenido.tpNombre}" /></b>?
+								</p>
+							</div>
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+	
+									<h:commandLink actionListener="#{tipoProducto.eliminar()}"
+										styleClass="btn btn-primary" value="Aceptar" />
+	
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

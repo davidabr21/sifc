@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" lang="#{language.locale}">
+
+<h:head>
+	<h:outputStylesheet library="css" name="gridpages.css"  />
+	<h:outputStylesheet library="css" name="dashboard.css"  />
+	<h:outputStylesheet library="css" name="bootstrap.min.css"  />
+	<script src="../js/jquery.min.js"></script>
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins"
+		rel="stylesheet" />
+
+	
+	<h:outputStylesheet library="css" name="jquery.dataTables.min.css"  />
+	<title><ui:insert name="pageTitle">
+		</ui:insert></title>
+</h:head>
+<h:body>
+	<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') != null}">
+	
+	<header> <f:view locale="#{language.locale}" />
+		<div class="menu-header">
+			<div class="session-info">
+				<div class="profile">
+				<h:graphicImage library="images" style="width: 24px" name="profile.svg" />
+				
+				</div>
+				<span><h:link value = "#{request.getSession(false).getAttribute('user')}" outcome= "profile" /> <br /> <b>#{request.getSession(false).getAttribute('rol')}</b></span>
+			</div>
+
+			<div class="logo-img">
+			<a name="menu-roles" href="Dashboard.xhtml">
+			<h:graphicImage library="images" style="object-fit: cover; width: 400px; height: 80px;" name="Duopharma.svg" />
+			</a>
+			</div>
+
+			<div class="finish-session-container">
+				<h:form>
+
+					<h:commandButton type="submit" value="" styleClass="spanish-btn"
+						action="#{language.changeLanguage('es')}"></h:commandButton>
+					<h:commandButton type="submit" value="" styleClass="english-btn"
+						action="#{language.changeLanguage('en')}"></h:commandButton>
+				</h:form>
+				<a class="finish-session-button"
+					href="#{request.contextPath}/LogoutServlet">#{translate['menu.logout']}</a>
+			</div>
+		</div>
+		<nav class="menu-dashboard">
+		<a class="menu-item" href="Dashboard.xhtml">#{translate['menu.index']}</a>
+		<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Administrador'}">
+		<div class="submenu-container">
+			<div>
+				<a name="menu-usuarios" class="menu-item item-father" href="#"><h:outputText
+						value="#{translate['menu.user']}" /></a>
+				<ul class="submenu">
+					<li><a name="menu-roles" href="Rol.xhtml"><h:outputText
+								value="#{translate['menu.rol']}" /></a></li>
+					<li><a name="menu-usuarios" href="Usuario.xhtml"><h:outputText
+								value="#{translate['menu.user']}" /></a></li>
+					<li><a name="menu-clientes" href="Cliente.xhtml"><h:outputText
+								value="#{translate['menu.customer']}" /></a></li>
+					<li><a name="menu-tipos-documento" style="padding: 0"
+						href="TipoDocumento.xhtml"> <h:outputText
+								value="#{translate['menu.doctype']}" /></a></li>
+				</ul>
+			</div>
+		</div>
+		</ui:fragment>
+		<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Farmaceutico'}">
+		<div class="submenu-container">
+			<div>
+				<a class="menu-item item-father" name="menu-fabricacion" href="#"><h:outputText
+						value="#{translate['menu.fabrication']}" /></a>
+				<ul class="submenu">
+					<li><a href="MateriaPrima.xhtml"><h:outputText
+								value="#{translate['menu.rawmaterial']}" /></a></li>
+					<li><a href="Producto.xhtml"><h:outputText
+								value="#{translate['menu.product']}" /></a></li>
+					<li><a href="TipoProducto.xhtml"><h:outputText
+								value="#{translate['menu.protype']}" /></a></li>
+					<li><a href="Prospecto.xhtml"><h:outputText
+								value="#{translate['menu.leaflet']}" /></a></li>
+					<li><a name="menu-formulas" href="Formula.xhtml"><h:outputText
+								value="#{translate['menu.formula']}" /></a></li>
+					<li><a name="menu-unidades-medida" href="UnidadMedida.xhtml"><h:outputText
+								value="#{translate['menu.measureunit']}" /></a></li>
+					<!-- <li><a name="menu-lotes" href="Lote.xhtml"><h:outputText
+								value="#{translate['menu.lot']}" /></a></li> -->
+				</ul>
+			</div>
+		</div>
+		</ui:fragment>
+
+		<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') != 'Cliente' and request.getSession(false).getAttribute('rol') != 'Farmaceutico'}">
+		<div class="submenu-container">
+			<div>
+				<a class="menu-item item-father" href=""><h:outputText
+						value="#{translate['menu.stocking']}" /></a>
+				<ul class="submenu">
+					<li class="subitem-father"><a href="#"><h:outputText
+								value="#{translate['menu.warehouse']}" /></a>
+						<ul class="submenu-son">
+							<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Operario'}">
+							<li><a href="Estanteria.xhtml"><h:outputText
+										value="#{translate['menu.rack']}" /></a></li>
+							<li><a href="EstanteriaMaterial.xhtml"><h:outputText
+							value="#{translate['menu.rackm']}" /></a></li>
+							</ui:fragment>
+							<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Administrador'}">
+							<li><a href="Bodega.xhtml"><h:outputText
+										value="#{translate['menu.warehouse']}" /></a></li>
+							</ui:fragment>
+						</ul></li>
+					<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Operario'}">
+					<li class="subitem-father"><a href="#"><h:outputText
+								value="#{translate['menu.warehtrans']}" /></a>
+						<ul class="submenu-son">
+							
+							<li><a href="MovimientoProducto.xhtml"><h:outputText
+										value="#{translate['menu.producttrans']}" /></a></li>
+							<!-- <li><a href="MovimientoMateriaPrima.xhtml"><h:outputText
+										value="#{translate['menu.rawtrans']}" /></a></li> -->
+							<li><a href="TipoOperacion.xhtml" style="padding: 0"><h:outputText
+										value="#{translate['menu.transtypes']}" /></a></li>
+						</ul></li>
+					</ui:fragment>
+					<li><a href="Proveedor.xhtml"><h:outputText
+								value="#{translate['menu.supplier']}" /></a></li>
+				</ul>
+			</div>
+		</div>
+		</ui:fragment>
+		
+		<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Farmaceutico'}">
+		<a class="menu-item" href="Pedido.xhtml"><h:outputText
+				value="#{translate['menu.orders']}" /></a> 
+		</ui:fragment>
+		<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Cliente'}">
+		<a class="menu-item" href="Pedido.xhtml"><h:outputText
+				value="#{translate['menu.orders']}" /></a> 
+		</ui:fragment>
+				<a class="menu-item" href="Carrito.xhtml"><h:outputText
+				value="#{translate['menu.cart']}" /></a> </nav> </header>
+
+		<ui:insert name="mainContain">
+		</ui:insert>
+		</ui:fragment>
+		
+
+		
+</h:body>
+</html>

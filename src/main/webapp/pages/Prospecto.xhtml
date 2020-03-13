@@ -1,0 +1,361 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	>
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+	<ui:define name="pageTitle"><h:outputText value = "SIFC - #{translate['menu.leaflet']}"/></ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/jquery.dataTables.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<script src="../resources/js/jquery.dataTables.min.js"></script>
+			<script src="../resources/js/grid.js"></script>
+			<style>
+			.column4, .column5 {
+				width: 30px;
+			}
+			</style>
+			<div class="img-header" style="background: url(#{resource['images/lab.jpg']}); background-size: cover; height: 180px; background-position-y: 420px;">
+				
+			</div>
+			<div class="main-container">
+				<div class="grid-container" style="width: 90%;">
+				<nav aria-label="breadcrumb">
+					  <ol class="breadcrumb" style="margin-bottom: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0;">
+					  <li class="breadcrumb-item"><a href="#">#{translate['menu.stocking']}</a></li>
+					  <li class="breadcrumb-item active" aria-current="page">#{translate['menu.leaflet']}</li>
+					  </ol>
+				</nav>
+
+					<h:form id="mainForm">
+
+						<nav class="top-grid-bar">
+
+						<div class="action-bar">
+								<a data-toggle="modal" data-target="#ModalAgregar"
+									href="#exampleModal"><img width="24"
+									src="../resources/images/SI/Grid/add.png" /></a>
+						</div>
+
+						</nav>
+
+						<h:dataTable value="#{prospecto.obtenerLista()}" var="obj"
+							styleClass="main-grid table table-striped table-sm" id="main-grid"
+							columnClasses="column1, column2, column3, column4, column5">
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="Id" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prsId}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['leaflet.name']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prsNombre}" style="margin-bottom: 0;" />
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['leaflet.description']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prsDescripcion}" style="margin-bottom: 0;" />
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">
+									<h:outputLabel value="#{translate['leaflet.type']}" />
+								</f:facet>
+								<h:outputLabel value="#{obj.prsTipo}" style="margin-bottom: 0;" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value=""
+									actionListener="#{prospecto.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#modalDelete" />
+									<f:ajax render="deleteForm" />
+									<img width="24" src="../resources/images/SI/Grid/remove.png" />
+								</h:commandLink>
+							</h:column>
+
+							<h:column>  
+								<f:facet name="header">
+								</f:facet>
+
+								<h:commandLink value=""
+									actionListener="#{prospecto.leer(obj)}"
+									styleClass="modifyBtn">
+									<f:passThroughAttribute name="data-toggle" value="modal" />
+									<f:passThroughAttribute name="href" value="#EditModal" />
+									<f:ajax render="editForm" />
+									<img width="24" src="../resources/images/SI/Grid/edit.png" />
+								</h:commandLink>
+							</h:column>
+
+						</h:dataTable>
+
+						<!-- POP UP PARA CREACIÓN/EDICIÓN -->
+						<!-- El PopUp -->
+						<div class="modal fade" id="ModalAgregar" tabindex="-1"
+							role="dialog" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+
+									<!-- PopUp Header -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel"><h:outputText value = "#{translate['form.add']} #{translate['leaflet']}"/></h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<!-- PopUp body -->
+									<div class="modal-body">
+
+										<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>Id:</label>
+												<h:inputText disabled="true" value="#{prospecto.prsId}"
+													styleClass="form-control" />
+											</div>
+
+											<div class="form-group col-6">
+												<h:outputLabel for="email" value="#{translate['leaflet.name']}" />
+												<h:inputText id="nombrePRS-i" value="#{prospecto.prsNombre}" requiredMessage="#{of:format1(translate['validation.required'], translate['leaflet.name'])}"
+												styleClass="form-control" required="true">
+													
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="45" message="#{of:format2(translate['validation.betweenchar'], 3, 45)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />
+													<f:ajax event="keyup" render="nombreMsg" />	
+												</h:inputText>
+												<h:message id="nombreMsg" for="nombrePRS-i" styleClass="validation-tooltip">
+													
+												</h:message>
+											</div>
+										
+										<div class="form-group col-12">
+											<label> #{translate['leaflet.type']}:
+											</label>
+											<h:selectOneMenu value="#{prospecto.prsTipo}"
+												required="true"
+												requiredMessage="#{of:format1(translate['validation.selection'], translate['leaflet.type'])}"
+												styleClass="custom-select" id="estado-i">
+												<f:selectItem itemLabel="#{translate['form.select']}"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItem itemValue="Dosificación" itemLabel="Dosificación"></f:selectItem>
+												<f:selectItem itemValue="Interacción" itemLabel="Interacción"></f:selectItem>
+												<f:selectItem itemValue="Posología" itemLabel="Posología"></f:selectItem>
+												<f:selectItem itemValue="Interacción" itemLabel="Interacción"></f:selectItem>
+												<f:selectItem itemValue="Precaución" itemLabel="Precaución"></f:selectItem>
+												<f:selectItem itemValue="Advertencias especiales" itemLabel="Advertencias especiales"></f:selectItem>
+												<f:selectItem itemValue="Indicación" itemLabel="Indicación"></f:selectItem>
+												<f:selectItem itemValue="Contraindicación" itemLabel="Contraindicación"></f:selectItem>
+												<f:selectItem itemValue="Duración" itemLabel="Duración"></f:selectItem>
+												<f:selectItem itemValue="Medidas" itemLabel="Medidas"></f:selectItem>
+												<f:selectItem itemValue="Instrucciones de Uso" itemLabel="Instrucciones de Uso"></f:selectItem>
+												<f:selectItem itemValue="Instrucciones de Aplicación" itemLabel="Instrucciones de Aplicación"></f:selectItem>
+												<f:selectItem itemValue="Conservación" itemLabel="Conservación"></f:selectItem>
+												<f:selectItem itemValue="Instrucciones" itemLabel="Instrucciones"></f:selectItem>
+												<f:selectItem itemValue="Reacciones Adversas" itemLabel="Reacciones Adversas"></f:selectItem>
+												<f:ajax event="change" render="estadoMsg" />
+											</h:selectOneMenu>
+											<br />
+											<h:message id="estadoMsg" for="estado-i"
+												styleClass="validation-tooltip" />
+										</div>
+
+										<div class="form-group col-12">
+												<h:outputLabel for="email" value="#{translate['leaflet.description']}" />
+												<h:inputTextarea rows="5" value="#{prospecto.prsDescripcion}" id="descripcionPRS-i" requiredMessage="#{of:format1(translate['validation.required'], translate['leaflet.description'])}"
+													styleClass="form-control" style="resize: none;" required="true">
+													<o:validator validatorId="javax.faces.Length" minimum="5" message="#{of:format1(translate['validation.minchar'], 5)}" />
+													<f:ajax event="keyup" render="descripcionMsg" />
+												</h:inputTextarea>
+												<h:message id="descripcionMsg" for="descripcionPRS-i" styleClass="validation-tooltip" />
+										</div>
+										</div>
+									</div>
+									<!-- PopUp footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger"
+											data-dismiss="modal">
+											<h:outputText value = "#{translate['form.cancel']}"/>
+										</button>
+										<h:commandButton value="#{translate['form.submit']}" id="submit-button"
+											action="#{prospecto.registrar()}"
+											styleClass="btn btn-success">
+										</h:commandButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+
+
+			<div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<h:form id="editForm">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">
+							<h:outputText value = "#{translate['form.edit']} #{translate['leaflet']}: "/><i><h:outputText
+											value="#{prospecto.objetoObtenido.prsNombre}" /></i>
+							</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+
+							<div class="modal-body">
+								<div class="form-row">
+
+											<div class="form-group col-6">
+												<label>Id:</label>
+												<h:inputText disabled="true" value="#{prospecto.prsId}"
+													styleClass="form-control" />
+											</div>
+
+											<div class="form-group col-6">
+												<h:outputLabel for="email" value="#{translate['leaflet.name']}" />
+												<h:inputText id="nombrePRS-i" value="#{prospecto.objetoObtenido.prsNombre}" requiredMessage="#{of:format1(translate['validation.required'], translate['leaflet.name'])}"
+												styleClass="form-control" required="true">
+													
+													<o:validator validatorId="javax.faces.Length" minimum="3" maximum="45" message="#{of:format2(translate['validation.betweenchar'], 3, 45)}" />
+													<o:validator validatorId="javax.faces.RegularExpression" pattern="^[a-zA-Z ]+$" message="#{translate['validation.onlyLetters']}" />
+													<f:ajax event="keyup" render="nombreMsg" />	
+												</h:inputText>
+												<h:message id="nombreMsg" for="nombrePRS-i" styleClass="validation-tooltip">
+													
+												</h:message>
+											</div>
+										
+										<div class="form-group col-12">
+											<label> #{translate['leaflet.type']}:
+											</label>
+											<h:selectOneMenu value="#{prospecto.objetoObtenido.prsTipo}"
+												required="true"
+												requiredMessage="#{of:format1(translate['validation.selection'], translate['leaflet.type'])}"
+												styleClass="custom-select" id="estado-i">
+												<f:selectItem itemLabel="#{translate['form.select']}"
+													itemValue="#{null}" noSelectionOption="true" />
+												<f:selectItem itemValue="Dosificación" itemLabel="Dosificación"></f:selectItem>
+												<f:selectItem itemValue="Interacción" itemLabel="Interacción"></f:selectItem>
+												<f:selectItem itemValue="Posología" itemLabel="Posología"></f:selectItem>
+												<f:selectItem itemValue="Interacción" itemLabel="Interacción"></f:selectItem>
+												<f:selectItem itemValue="Precaución" itemLabel="Precaución"></f:selectItem>
+												<f:selectItem itemValue="Advertencias especiales" itemLabel="Advertencias especiales"></f:selectItem>
+												<f:selectItem itemValue="Indicación" itemLabel="Indicación"></f:selectItem>
+												<f:selectItem itemValue="Contraindicación" itemLabel="Contraindicación"></f:selectItem>
+												<f:selectItem itemValue="Duración" itemLabel="Duración"></f:selectItem>
+												<f:selectItem itemValue="Medidas" itemLabel="Medidas"></f:selectItem>
+												<f:selectItem itemValue="Instrucciones de Uso" itemLabel="Instrucciones de Uso"></f:selectItem>
+												<f:selectItem itemValue="Instrucciones de Aplicación" itemLabel="Instrucciones de Aplicación"></f:selectItem>
+												<f:selectItem itemValue="Conservación" itemLabel="Conservación"></f:selectItem>
+												<f:selectItem itemValue="Instrucciones" itemLabel="Instrucciones"></f:selectItem>
+												<f:selectItem itemValue="Reacciones Adversas" itemLabel="Reacciones Adversas"></f:selectItem>
+												<f:ajax event="change" render="estadoMsg" />
+											</h:selectOneMenu>
+											<br />
+											<h:message id="estadoMsg" for="estado-i"
+												styleClass="validation-tooltip" />
+										</div>
+
+										<div class="form-group col-12">
+												<h:outputLabel for="email" value="#{translate['leaflet.description']}" />
+												<h:inputTextarea rows="5" value="#{prospecto.objetoObtenido.prsDescripcion}" id="descripcionPRS-i" requiredMessage="#{of:format1(translate['validation.required'], translate['leaflet.description'])}"
+													styleClass="form-control" style="resize: none;" required="true">
+													<o:validator validatorId="javax.faces.Length" minimum="5" message="#{of:format1(translate['validation.minchar'], 5)}" />
+													<f:ajax event="keyup" render="descripcionMsg" />
+												</h:inputTextarea>
+												<h:message id="descripcionMsg" for="descripcionPRS-i" styleClass="validation-tooltip" />
+										</div>
+										</div>
+							</div>
+
+							<!-- PopUp footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger"
+									data-dismiss="modal">
+									<h:outputText value = "#{translate['form.cancel']}"/>	
+								</button>
+								<h:commandButton
+									action="#{prospecto.actualizar()}"
+									value="#{translate['form.update']}" styleClass="btn btn-success" />
+							</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<div class="modal fade" id="modalDelete">
+				<div class="modal-dialog">
+					<div class="modal-content">
+
+						<!-- PopUp Header -->
+						<div class="modal-header">
+							<h4 class="modal-title">
+								<h:outputText value = "#{translate['form.warning']}"/>
+							</h4>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<!-- PopUp body -->
+						<h:form id="deleteForm">
+						<div class="modal-body">
+							<p>
+								<span style="margin: 0 10px 0 0;"><img width="48"
+									src="../resources/images/SI/warning.png" /> </span> 
+									<h:outputText value = "#{of:format2(translate['form.confirmdelete'], translate['leaflet'], prospecto.objetoObtenido.prsNombre)}"/>
+							</p>
+						</div>
+						<!-- PopUp footer -->
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">
+								<h:outputText value = "#{translate['form.cancel']}"/>
+							</button>
+								<h:commandLink actionListener="#{prospecto.eliminar()}"
+									styleClass="btn btn-primary" value="#{translate['form.ok']}" />
+						</div>
+						</h:form>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

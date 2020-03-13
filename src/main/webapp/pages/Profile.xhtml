@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<h:head>
+	<title>Bodega</title>
+</h:head>
+<h:body>
+	<ui:composition template="/resources/templates/adminTemplate.xhtml">
+		<f:metadata>
+        	<f:event type="preRenderView" listener="#{usuariob.obtenerUsuario(request.getSession(false).getAttribute('id'))}"/>
+      	</f:metadata>
+		<ui:define name="pageTitle">
+			<h:outputText value="SIFC - #{translate['menu.warehouse']}" />
+		</ui:define>
+		<ui:define name="mainContain">
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/gridpages.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/dashboard.css" />
+			<link rel="stylesheet" type="text/css"
+				href="../resources/css/bootstrap.min.css" />
+			<script src="../resources/js/jquery.min.js"></script>
+			<script src="../resources/js/bootstrap.min.js"></script>
+			<link rel="stylesheet" type="text/css"
+					href="../resources/css/jquery.dataTables.min.css" />
+				<h:outputScript library="js" name="jquery.dataTables.min.js"
+					target="body" />
+				<script type="text/javascript" src="../resources/js/pdfmake.min.js"></script>
+				<script type="text/javascript" src="../resources/js/vfs_fonts.js"></script>
+				<h:outputScript library="js" name="grid.js" target="body" />
+				<script src="../resources/js/d3.v5.min.js"></script>
+				<script src="../resources/js/c3.min.js"></script>
+				<link rel="stylesheet" type="text/css" href="../resources/css/c3.min.css"/>
+			<style>
+.column5, .column6 {
+	width: 30px;
+}
+</style>
+			<style>
+				.user-thumbnail{
+					padding: 20px 15%;
+					text-align: center;
+				}
+				.form-group{
+					text-align: left;
+					padding: 0;
+					padding: 10px 10px 5px 10px;
+					background-color: #eee;
+					border: 1px solid #bbb;
+					font-family: 'Poppins', sans-serif;
+					margin-bottom: 0;
+				}
+				.profile-input{
+					border: 0;
+					border-bottom: 1px solid transparent;
+					background-color: transparent;
+					width: 100%;
+					margin-right: 25px;
+				}
+				.profile-input:focus{
+					border: 0;
+					border-bottom: 1px solid #bbb;
+					background-color: transparent;
+					outline: none;
+					
+				}
+				.send-profile, .reset-profile{
+					display: none
+					
+				}
+				
+				.reset-profile{
+				border: 0;
+    			padding: .344rem .75rem;
+    			}
+			</style>
+
+			<div class="main-container">
+				<div class="user-thumbnail">
+				
+					<h:form>
+					
+						<hr />
+						<a data-toggle="modal" href="#readModal">
+							<o:graphicImage rendered="#{not empty usuariob.usuarioLogeado.usImagen}" value="#{usuariob.usuarioLogeado.usImagen}" dataURI="true" width="150" style="max-height: 400px; border-radius: 50%;" />			
+						</a>
+						<h:graphicImage rendered="#{empty usuariob.usuarioLogeado.usImagen}" library="images" style="width: 100px" name="profile.svg" />
+						
+						<br />
+						<h2 style="font-weight: 100;">#{request.getSession(false).getAttribute('user')}</h2>
+						<hr />
+						<div class="row">
+						<div class="row col-6">
+							<div class="form-group col-12" style="padding: 0">
+								<label style="margin: 0; padding: 15px 5px; width: 100%; display: flex">
+								<div class="col-4" style="padding: 0 0 0 20px"><b>#{translate['user.names']}</b></div>
+								<div class="col-8" style="padding: 0 15px 0 0"><h:inputText value="#{usuariob.usuarioLogeado.usNombres}" class="profile-input">
+									
+								</h:inputText></div>
+								</label>
+							</div>
+							<div class="form-group col-12" style="padding: 0">
+								<label style="margin: 0; padding: 15px 5px; width: 100%; display: flex">
+								<div class="col-4" style="padding: 0 0 0 20px"><b>#{translate['user.surnames']}</b></div>
+								<div class="col-8" style="padding: 0 15px 0 0"><h:inputText value="#{usuariob.usuarioLogeado.usApellidos}" class="profile-input">
+									
+								</h:inputText></div>
+								</label>
+							</div>
+							<div class="form-group col-12" style="padding: 0">
+								<label style="margin: 0; padding: 15px 5px; width: 100%; display: flex">
+								<div class="col-4" style="padding: 0 0 0 20px"><b>#{translate['user.email']}</b></div>
+								<div class="col-8" style="padding: 0 15px 0 0"><h:inputText value="#{usuariob.usuarioLogeado.usCorreo}" class="profile-input">
+									
+								</h:inputText></div>
+								</label>
+							</div>
+							<div class="form-group col-12" style="padding: 0">
+								<label style="margin: 0; padding: 15px 5px; width: 100%; display: flex">
+								<div class="col-4" style="padding: 0 0 0 20px"><b>#{translate['user']}</b></div>
+								<div class="col-8" style="padding: 0 15px 0 0"><h:inputText value="#{usuariob.usuarioLogeado.usNombreDeUsuario}" class="profile-input">
+									
+								</h:inputText></div>
+								</label>
+							</div>
+							<div class="form-group col-12" style="padding: 0">
+								<label style="margin: 0; padding: 15px 5px; width: 100%; display: flex">
+								<div class="col-4" style="padding: 0 0 0 20px"><b>#{translate['user.password']}</b></div>
+								<div class="col-8" style="padding: 0 15px 0 0"><h:inputText value="#{usuariob.usuarioLogeado.usClave}" class="profile-input">
+									
+								</h:inputText></div>
+								</label>
+							</div>
+							
+							<div class="col-6" style="text-align: left; margin-top: 30px; padding: 0">
+							<h:commandLink styleClass="btn btn-primary send-profile" value="#{translate['form.ok']}" />
+							<input type="reset" value="#{translate['form.cancel']}" class="btn btn-danger reset-profile"/>
+							</div>
+						</div>
+						<div class="col-6">
+						</div>
+						</div>
+						<br />
+						
+						<div class="modal fade" id="readModal" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+
+							
+							<div class="modal-content">
+								<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+									<div class="modal-body">
+										<o:graphicImage rendered="#{not empty usuariob.usuarioLogeado.usImagen}" value="#{usuariob.usuarioLogeado.usImagen}" dataURI="true" style="max-width: 100%; max-height: 100%;" />
+									</div>
+		
+							</div>
+						</div>
+					</div>
+						
+					</h:form>
+				</div>
+			</div>
+			<script type="text/javascript">
+				$(".profile-input").keyup(showBtn);
+				$(".reset-profile").click(hideBtn);
+				function showBtn(){
+					$(".send-profile").show();
+					$(".reset-profile").show();
+				}
+				function hideBtn(){
+					$(".send-profile").hide();
+					$(".reset-profile").hide();
+				}
+			</script>
+
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

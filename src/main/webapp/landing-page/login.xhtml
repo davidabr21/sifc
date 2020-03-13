@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<head>
+<title>Inicio</title>
+</head>
+<body>
+	<ui:composition
+		template="../resources/templates/landingPageTemplate.xhtml">
+		<ui:define name="mainContain">
+		<h:outputStylesheet library="css" name="bootstrap.min.css"  />
+			<script type="text/javascript" src="resources/js/validacion.js"></script>
+			<iframe width="0" height="0" border="0" name="frame"
+				style="position: absolute;" id="frame"></iframe>
+			<div class="principal">
+				<div class="main-container-l">
+					<div class="login-box">
+						<form name="form" action="#{request.contextPath}/LoginServlet" method="post">
+							<label style="margin-right: 7px;"><b>Nombre de
+									Usuario:</b> </label> <input id="user-input" class="form-control"
+								type="text" name="username" required="true" />
+							<label style="margin-right: 65px;"><b>Contraseña:</b> </label> <input
+								id="pass-input" class="form-control" type="password" name="password"
+								required="true"/>
+							<div style="text-align: center; padding: 30px 0px 0px 0px;">
+								<input class="submit-login btn btn-light" id="submitlg" value="Ingresar"
+									type="submit" />
+								<br/>
+								<h:link value = "¿Aún no tienes cuenta? Registrate" outcome= "registrar" style="color: #fff"/>
+								
+							</div>
+							<h:outputText value="${param.errMessage}"></h:outputText>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

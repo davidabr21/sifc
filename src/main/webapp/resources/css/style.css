@@ -1,0 +1,264 @@
+@charset "ISO-8859-1";
+body{
+  font-family: 'Poppins', sans-serif;
+	margin: 0;
+}
+
+.principal{
+
+}
+
+.header-content{
+	background-color: #eee;
+}
+
+.logo-container{
+
+}
+
+.logo-img{
+    margin: auto;
+	  width: 400px;
+    height: 80px;
+  	background-position: -20px -45px;;
+  	background-repeat: no-repeat;
+}
+
+.menu-container{
+  background-color: #4e799c;
+	text-align: center;
+	padding: 10px;
+  border-bottom: 2px solid #3e607c;
+}
+
+.option {
+  padding: 10px 40px;
+  text-decoration: none;
+  color: white;
+  background-color: #689cc5;
+  margin: 10px 20px;
+}
+
+.actual-option{
+  padding: 10px 40px;
+  text-decoration: none;
+  color: white;
+  background-color: #325571;
+  margin: 10px 20px;
+}
+
+
+
+.actual-option:hover{
+    text-decoration: none;
+    color: #fff;
+    cursor: default;
+}
+
+.menu-container .option:hover{
+    text-decoration: underline;
+    color: #ddd;
+}
+
+.main-container-l{
+  padding: 80px 10% 80px 10%;
+  font-size: 20px;
+  background-color: #fff;
+  background: url(https://previews.123rf.com/images/stokkete/stokkete1505/stokkete150500182/3o-juntos-en-la-mesa-de-la-oficina-con-la-tableta-portátil-documen.jpg);
+}
+
+.main-container{
+  padding: 0 10% 80px 10%;
+  font-size: 20px;
+  background-color: #fff;
+}
+
+.banner img{
+  width: 100%;
+}
+
+.content-div{
+  color: #4e799c;
+  text-align: center;
+}
+
+.description-container{
+  margin: 30px 0 30px 0;
+}
+
+.products-container{
+  display: flex;
+  margin: 30px 0
+}
+
+.producto1{
+    background-image: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ),
+    url('resources/images/bloqueador.jpg');
+}
+
+.img-container{
+  width: 33%;
+}
+
+footer{
+  border-bottom: 2px solid;
+  padding: 0 10%;
+  background-color: #325b7c;
+  text-transform: bold;
+  color: white;
+}
+
+.sites-footer-container{
+    line-height: 50px;
+}
+
+.main-footer-container{
+  border-bottom: 2px solid;
+  display: flex;
+}
+
+.footer-container{
+  padding: 15px 0;
+  border-right: 2px solid;
+  width: 33%;
+}
+
+.footer-container-last{
+  padding: 15px 0;
+  border-right: none;
+  width: 33%;
+}
+
+footer div div img{
+  vertical-align:middle
+}
+
+footer div div span{
+  margin-left: 5px;
+}
+
+.contact-footer {
+  
+  /*text-align: center;*/
+}
+
+.social-media{
+  padding-left: 15px;
+  /*text-align: center;*/
+}
+
+.sites-footer{
+  padding-left: 15px;
+}
+
+.sites-footer ul{
+  line-height: 61px;
+  padding: 0;
+  list-style:none;
+}
+
+.sites-footer ul li a{
+  margin-left: 10px;
+}
+
+.sites-footer a{
+  text-decoration: none;
+  color: #29266b;
+  font-size: 19px;
+}
+
+.sites-footer a:hover{
+  text-decoration: underline;
+  color: #1b194e;
+
+}
+
+.footer-footer{
+  text-align:center;
+  padding: 10px 0;
+}
+
+
+/*Seccion login*/
+.login-box {
+    line-height: 40px;
+    width: 40%;
+    margin: 0px auto 20px auto;
+    padding: 40px;
+    background-color: #4e799cd1;
+}
+
+.input-login{
+    border: 0;
+    height: 25px;
+    border-radius: 10px;
+    padding-left: 12px;
+    width: 97%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.submit-login{
+  padding: 5px 65px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Fin seccion login */
+
+/* Seccion contacto */
+
+.principal-banner-container{
+
+}
+
+.textarea-form{
+    height: 100px;
+}
+
+.empty-half{
+  width:50%;
+}
+
+.form-container{
+  width:50%;
+  background-color: #00000090;
+  padding: 20px;
+  color:white;
+}
+
+.contact-form input[type="text"]{
+  border: 0;
+  border-radius: 10px;
+  padding-left: 12px;
+  width: 97%;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 10px;
+}
+
+.common-input{
+  height: 25px;
+}
+
+.submit-button{
+    border: 1px;
+    padding: 8px 50px;
+    border-radius: 50px;
+    margin-top: 20px;
+}
+
+.submit-button:hover{
+  background-color: #5c5252;
+  color: white;
+}
+
+.form-footer{
+  text-align: right;
+}
+
+.buttons-excel{
+	border: 0;
+    margin: 5px;
+}

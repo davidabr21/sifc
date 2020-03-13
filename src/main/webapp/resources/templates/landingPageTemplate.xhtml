@@ -15,34 +15,23 @@
 			<div class="logo-img"><h:graphicImage library="images" style="object-fit: cover; width: 400px; height: 80px;" name="Duopharma.svg" /></div>
 		</div>
 	</div>
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark text-center">
-	  <div class="container text-center">
-	    <a class="navbar-brand text-center" href="#"></a>
-	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-	      <span class="navbar-toggler-icon"></span>
-	    </button>
-	    <div class="collapse navbar-collapse" id="navbarResponsive">
-	      <ul class="navbar-nav ml-auto mx-auto">
-	        <li class="nav-item active">
-	          <a class="nav-link" href="#">
-	          	<h:link value="Inicio" outcome="inicio" styleClass="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}" />
-	          </a>
-	        </li>
-	        <li class="nav-item">
-	          <a class="nav-link" href="#">About</a>
-	        </li>
-	      </ul>
-	    </div>
-	  </div>
-	</nav>
 	<nav class="menu-container">
-	
-		
+		<h:link value="Inicio" outcome="inicio" styleClass="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}" />
 		<h:link value="Contactenos" outcome="contactenos" styleClass="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"/>
 		<h:link value="Ingresar" outcome="login" styleClass="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"/>
 		<h:link value="Quienes Somos" outcome="quienesSomos" styleClass="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"/>
 		<h:link value="Carrito" outcome="carrito" styleClass="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"/>
-
+		<!-- <a
+		class="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"
+		href="../../index.xhtml">Inicio</a> <a
+		class="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"
+		href="../../landing-page/contactenos.xhtml">Contáctenos</a> <a
+		class="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"
+		href="../../landing-page/login.xhtml">Ingresar</a> <a
+		class="#{view.viewId eq page.viewId ? 'actual-option' : 'option'}"
+		href="../../landing-page/quienes_somos.xhtml">Quienes Somos</a> 
+		
+		 -->
 	</nav>
 	<ui:insert name="mainContain">
 	</ui:insert>

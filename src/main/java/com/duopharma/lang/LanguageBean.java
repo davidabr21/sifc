@@ -11,7 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
  
 @ManagedBean(name="language")
-@SessionScoped
+@ViewScoped
 public class LanguageBean implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

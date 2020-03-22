@@ -136,7 +136,7 @@
 		</div>
 		</ui:fragment>
 		
-		<ui:fragment rendered=""#{request.getSession(false).getAttribute('rol') != 'Farmaceutico' and request.getSession(false).getAttribute('rol') != 'Administrador'}">
+		<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') != 'Farmaceutico' and request.getSession(false).getAttribute('rol') != 'Administrador'}">
 		<a class="menu-item" href="Pedido.xhtml"><h:outputText
 				value="#{translate['menu.orders']}" /></a> 
 		</ui:fragment>

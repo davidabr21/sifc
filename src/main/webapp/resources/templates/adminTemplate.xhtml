@@ -105,12 +105,12 @@
 					<li class="subitem-father"><a href="#"><h:outputText
 								value="#{translate['menu.warehouse']}" /></a>
 						<ul class="submenu-son">
-							<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Operario'}">
+							
 							<li><a href="Estanteria.xhtml"><h:outputText
 										value="#{translate['menu.rack']}" /></a></li>
 							<li><a href="EstanteriaMaterial.xhtml"><h:outputText
 							value="#{translate['menu.rackm']}" /></a></li>
-							</ui:fragment>
+							
 							<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Administrador'}">
 							<li><a href="Bodega.xhtml"><h:outputText
 										value="#{translate['menu.warehouse']}" /></a></li>
@@ -136,7 +136,7 @@
 		</div>
 		</ui:fragment>
 		
-		<ui:fragment rendered="#{request.getSession(false).getAttribute('rol') == 'Farmaceutico'}">
+		<ui:fragment rendered=""#{request.getSession(false).getAttribute('rol') != 'Farmaceutico' and request.getSession(false).getAttribute('rol') != 'Administrador'}">
 		<a class="menu-item" href="Pedido.xhtml"><h:outputText
 				value="#{translate['menu.orders']}" /></a> 
 		</ui:fragment>
